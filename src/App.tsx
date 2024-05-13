@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import { ExerciseForm, IntakeForm} from './Forms';
 import './App.css'
 
 const lifts = [
@@ -38,54 +39,6 @@ const Home = ({clickHandler}) => {
       <button className="category-selection" onClick={() => clickHandler('intake')}>Intake</button>
     </div>
   )
-}
-
-const ExerciseForm = ({item, toggleModal}) => {
-  const postForm = (formData) => {
-    console.log(formData)
-    toggleModal()
-  }
-  return (
-    <>
-      <h1 className="form-title">{item.name}</h1>
-      <form className="entry-form" action={postForm}>
-        <input name="id" type="hidden" defaultValue={item.id} readOnly />
-        <p>
-          <label htmlFor="weight">Weight:</label>
-        </p>
-        <input name="weight" type="number" min="1" inputMode="numeric" required autoFocus />
-        <p>
-          <label htmlFor="reps">Rep count:</label>
-        </p>
-        <input name="reps" type="number" min="1" inputMode="numeric" required />
-        <p>
-          <label htmlFor="notes">Notes:</label>
-        </p>
-        <input name="notes" type="textArea" />
-        <button className="submit-form" type="submit">Submit</button>
-      </form>
-    </>
-  );
-}
-
-const IntakeForm = ({item, toggleModal}) => {
-  const postForm = (formData) => {
-    console.log(formData)
-    toggleModal()
-  }
-  return (
-    <>
-      <h1 className="form-title">{item.name}</h1>
-      <form className="entry-form" action={postForm}>
-        <input name="id" type="hidden" defaultValue={item.id} readOnly />
-        <p>
-          <label htmlFor="weight">Weight:</label>
-        </p>
-        <input name="weight" type="number" min="1" inputMode="numeric" autoFocus />
-        <button className="submit-form" type="submit">Submit</button>
-      </form>
-    </>
-  );
 }
 
 const Item = (category, item) => {
