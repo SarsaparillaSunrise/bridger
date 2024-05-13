@@ -40,56 +40,69 @@ const Home = ({clickHandler}) => {
   )
 }
 
-const ExerciseForm = ({id}) => {
-  const postForm = (formData) => console.log(formData)
+const ExerciseForm = ({item, toggleModal}) => {
+  const postForm = (formData) => {
+    console.log(formData)
+    toggleModal()
+  }
   return (
-    <form className="entry-form" action={postForm}>
-      <input name="id" type="hidden" defaultValue={id} readOnly />
-      <p>
-        <label htmlFor="weight">Weight:</label>
-      </p>
-      <input name="weight" type="number" min="1" inputMode="numeric" required autoFocus />
-      <p>
-        <label htmlFor="reps">Rep count:</label>
-      </p>
-      <input name="reps" type="number" min="1" inputMode="numeric" required />
-      <p>
-        <label htmlFor="notes">Notes:</label>
-      </p>
-      <input name="notes" type="textArea" />
-      <button type="submit">Submit</button>
-    </form>
+    <>
+      <h1 className="form-title">{item.name}</h1>
+      <form className="entry-form" action={postForm}>
+        <input name="id" type="hidden" defaultValue={item.id} readOnly />
+        <p>
+          <label htmlFor="weight">Weight:</label>
+        </p>
+        <input name="weight" type="number" min="1" inputMode="numeric" required autoFocus />
+        <p>
+          <label htmlFor="reps">Rep count:</label>
+        </p>
+        <input name="reps" type="number" min="1" inputMode="numeric" required />
+        <p>
+          <label htmlFor="notes">Notes:</label>
+        </p>
+        <input name="notes" type="textArea" />
+        <button className="submit-form" type="submit">Submit</button>
+      </form>
+    </>
   );
 }
 
-const IntakeForm = ({id}) => {
-  const postForm = (formData) => console.log(formData)
+const IntakeForm = ({item, toggleModal}) => {
+  const postForm = (formData) => {
+    console.log(formData)
+    toggleModal()
+  }
   return (
-    <form className="entry-form" action={postForm}>
-      <input name="id" type="hidden" defaultValue={id} readOnly />
-      <p>
-        <label htmlFor="weight">Weight:</label>
-      </p>
-      <input name="weight" type="number" min="1" inputMode="numeric" autoFocus />
-      <button className="submit-form" type="submit">Submit</button>
-    </form>
+    <>
+      <h1 className="form-title">{item.name}</h1>
+      <form className="entry-form" action={postForm}>
+        <input name="id" type="hidden" defaultValue={item.id} readOnly />
+        <p>
+          <label htmlFor="weight">Weight:</label>
+        </p>
+        <input name="weight" type="number" min="1" inputMode="numeric" autoFocus />
+        <button className="submit-form" type="submit">Submit</button>
+      </form>
+    </>
   );
 }
 
 const Item = (category, item) => {
   const [modalStatus, setModalStatus] = useState(false)
+  const toggleModal = () => setModalStatus(!modalStatus)
+
   return (
     <div key={item.name}>
-
-    <button onClick={() => setModalStatus(!modalStatus)}>{item.name}</button>
+      <button className="item-button" onClick={toggleModal}>{item.name}</button>
       {
         modalStatus ?
-          <div className="overlay">
+          <div className="overlay" onClick={toggleModal}>
           {
             category == 'exercise' ?
-              <ExerciseForm />
+              <ExerciseForm item={item} toggleModal={toggleModal} />
             :
-              <IntakeForm />
+              <IntakeForm item={item} toggleModal={toggleModal} />
           }
           </div>
           : ''

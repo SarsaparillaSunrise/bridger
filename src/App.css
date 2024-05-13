@@ -34,7 +34,7 @@
   padding-bottom: 0.2em;
   font-weight: bold;
   font-size: 1.3em;
-  color: var(--tertiary-colour);
+  color: var(--secondary-colour);
 }
 
 .entry-form input:not([type=checkbox]):not([type=radio]) {
@@ -49,11 +49,12 @@
 
 .form-title {
   text-align: center;
-  color: var(--tertiary-colour);
+  color: var(--secondary-colour);
   font-weight: bold;
   padding-bottom: 0.5em;
   display: block;
   font-size: 2.5em;
+  text-transform: capitalize;
 }
 
 .search-form p {
@@ -71,6 +72,16 @@
   height: 2.5em;
   font-size: 2em;
   -moz-appearance: textfield;
+}
+
+.submit-form {
+  float: right;
+}
+
+.item-button {
+  display: block;
+  /* float: left; */
+  text-transform: capitalize;
 }
 
 .overlay {
