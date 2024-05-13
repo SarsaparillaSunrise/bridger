@@ -1,9 +1,12 @@
 import { useState } from 'react'
 import './App.css'
 
-const Home = () => {
+const Home = ({clickHandler}) => {
   return (
-    <h1>Home</h1>
+    <>
+      <button className="category-selection" onClick={() => clickHandler('exercise')}>Exercise</button>
+      <button className="category-selection" onClick={() => clickHandler('intake')}>Intake</button>
+    </>
   )
 }
 
@@ -16,7 +19,7 @@ const App = () => {
     <div className="container">
       {
       category == null ?
-        <Home />
+        <Home clickHandler={setCategory}/>
       :
         <Search />
       }
