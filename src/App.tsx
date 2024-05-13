@@ -40,7 +40,22 @@ const Home = ({clickHandler}) => {
   )
 }
 
-const Item = (item) => (<h3 key={item.name}>{item.name}</h3>)
+const Item = (item) => {
+  const [modalStatus, setModalStatus] = useState(false)
+  return (
+    <div className="item">
+
+    <button key={item.name} onClick={() => setModalStatus(!modalStatus)}>{item.name}</button>
+      {
+        modalStatus ?
+          <div className="overlay">
+          <h1>{item.name}</h1>
+          </div>
+          : ''
+      }
+    </div>
+  )
+}
 
 const Search = ({category, items}) => {
   const search = (e) => console.log(e.key)
