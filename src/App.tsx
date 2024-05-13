@@ -41,11 +41,18 @@ const Home = ({clickHandler}) => {
 }
 
 const Search = ({category, items}) => {
+  const search = (e) => console.log(e.key)
   return (
-  <>
-    <h1>Search</h1>
-    <h2>{category}</h2>
-    <h2>{JSON.stringify(items)}</h2>
+      <>
+        <form className="search-form">
+          <input name="q" autoFocus onKeyDown={search} />
+        </form>
+        <div className="search-results">
+          <h1>Search</h1>
+          <h2>{category}</h2>
+          <h2>{JSON.stringify(items)}</h2>
+      </div>
+
   </>
   )
 }
