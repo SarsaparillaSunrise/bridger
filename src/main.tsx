@@ -5,6 +5,9 @@ import './index.css'
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
+    <header className="page-header">
+      <h1>Tracker</h1>
+    </header>
     <App />
   </React.StrictMode>,
 )

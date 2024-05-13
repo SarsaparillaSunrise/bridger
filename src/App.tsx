@@ -33,10 +33,10 @@ const foods = [
 
 const Home = ({clickHandler}) => {
   return (
-    <>
+    <div className="categories">
       <button className="category-selection" onClick={() => clickHandler('exercise')}>Exercise</button>
       <button className="category-selection" onClick={() => clickHandler('intake')}>Intake</button>
-    </>
+    </div>
   )
 }
 
@@ -120,16 +120,16 @@ const App = () => {
   const data = {'exercise': lifts, 'intake': foods}
 
   return (
-    <div className="container">
-      {
-      category == null ?
-        <Home clickHandler={setCategory}/>
-      :
-        <Search category={category} items={data[category]} />
-      }
-
-    </div>
-    
+      <div className="container">
+        <main className="main">
+          {
+          category == null ?
+            <Home clickHandler={setCategory}/>
+          :
+            <Search category={category} items={data[category]} />
+          }
+        </main>
+      </div>
   )
 }
 
