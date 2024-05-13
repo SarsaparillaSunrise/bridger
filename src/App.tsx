@@ -40,7 +40,43 @@ const Home = ({clickHandler}) => {
   )
 }
 
-const Item = (item) => {
+const ExerciseForm = ({id}) => {
+  const postForm = (formData) => console.log(formData)
+  return (
+    <form className="entry-form" action={postForm}>
+      <input name="id" type="hidden" defaultValue={id} readOnly />
+      <p>
+        <label htmlFor="weight">Weight:</label>
+      </p>
+      <input name="weight" type="number" min="1" inputMode="numeric" required autoFocus />
+      <p>
+        <label htmlFor="reps">Rep count:</label>
+      </p>
+      <input name="reps" type="number" min="1" inputMode="numeric" required />
+      <p>
+        <label htmlFor="notes">Notes:</label>
+      </p>
+      <input name="notes" type="textArea" />
+      <button type="submit">Submit</button>
+    </form>
+  );
+}
+
+const IntakeForm = ({id}) => {
+  const postForm = (formData) => console.log(formData)
+  return (
+    <form className="entry-form" action={postForm}>
+      <input name="id" type="hidden" defaultValue={id} readOnly />
+      <p>
+        <label htmlFor="weight">Weight:</label>
+      </p>
+      <input name="weight" type="number" min="1" inputMode="numeric" autoFocus />
+      <button className="submit-form" type="submit">Submit</button>
+    </form>
+  );
+}
+
+const Item = (category, item) => {
   const [modalStatus, setModalStatus] = useState(false)
   return (
     <div key={item.name}>
@@ -49,7 +85,12 @@ const Item = (item) => {
       {
         modalStatus ?
           <div className="overlay">
-          <h1>{item.name}</h1>
+          {
+            category == 'exercise' ?
+              <ExerciseForm />
+            :
+              <IntakeForm />
+          }
           </div>
           : ''
       }
@@ -66,7 +107,7 @@ const Search = ({category, items}) => {
         </form>
         <div className="search-results">
         <ul>
-          {items.map((item) => Item(item))}
+          {items.map((item) => Item(category, item))}
         </ul>
       </div>
 
