@@ -1,13 +1,28 @@
 import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
 import './App.css'
 
-function App() {
-  const [count, setCount] = useState(0)
-
+const Home = () => {
   return (
     <h1>Home</h1>
+  )
+}
+
+const Search = () => (<h1>Search</h1>)
+
+const App = () => {
+  const [category, setCategory] = useState(null)
+
+  return (
+    <div className="container">
+      {
+      category == null ?
+        <Home />
+      :
+        <Search />
+      }
+
+    </div>
+    
   )
 }
 
