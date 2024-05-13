@@ -43,9 +43,9 @@ const Home = ({clickHandler}) => {
 const Item = (item) => {
   const [modalStatus, setModalStatus] = useState(false)
   return (
-    <div className="item">
+    <div key={item.name}>
 
-    <button key={item.name} onClick={() => setModalStatus(!modalStatus)}>{item.name}</button>
+    <button onClick={() => setModalStatus(!modalStatus)}>{item.name}</button>
       {
         modalStatus ?
           <div className="overlay">
