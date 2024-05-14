@@ -1,42 +1,7 @@
 import { useState } from 'react'
-import { ExerciseForm, BeverageForm, FoodForm} from './Forms';
+import { ExerciseForm, BeverageForm, FoodForm, getItems} from './Forms';
 import './App.css'
 
-const lifts = [
-  {
-    "id": 1,
-    "category": "compound-lift",
-    "name": "squat",
-  },
-  {
-    "id": 2,
-    "category": "compound-lift",
-    "name": "deadlift",
-  },
-  {
-    "id": 3,
-    "category": "compound-lift",
-    "name": "bench press",
-  }
-]
-
-const consumables = [
-  {
-    "id": 1,
-    "category": "beverage",
-    "name": "coffee",
-  },
-  {
-    "id": 2,
-    "category": "food",
-    "name": "pistachio nuts",
-  },
-  {
-    "id": 3,
-    "category": "food",
-    "name": "toast",
-  }
-]
 
 const Home = ({clickHandler}) => {
   return (
@@ -95,9 +60,10 @@ const Search = ({category, items}) => {
   )
 }
 
-const App = () => {
+const App = async () => {
   const [category, setCategory] = useState(null)
-  const data = {'exercise': lifts, 'intake': consumables}
+  const data = {'exercise': await getItems('exercise'), 'intake': await getItems('intake')}
+  console.log(data)
 
   return (
       <div className="container">

@@ -39,7 +39,6 @@ const FoodForm = ({item, toggleModal}) => {
       "id": formData.get('id'),
       "weight": formData.get('weight'),
     })
-    // document.getElementById("search-input").reset()
     toggleModal()
   }
   return (
@@ -65,7 +64,6 @@ const BeverageForm = ({item, toggleModal}) => {
       "id": formData.get('id'),
       "volume": formData.get('weight'),
     })
-    // document.getElementById("search-input").reset()
     toggleModal()
   }
   return (
@@ -84,12 +82,16 @@ const BeverageForm = ({item, toggleModal}) => {
   );
 }
 
-const uri = 'http://127.0.0.1:80/post'
+const baseUri = 'http://127.0.0.1:8000/'
 const options = {
   method: 'POST',
   mode: 'cors',
   body: null
 }
+
+const getItems = async (category) => fetch(baseUri + category, {mode: 'cors'})
+  .then(response => response.json())
+  .catch(error => console.error(error));
 
 const postFormData = async (formData) => {
   options["body"] = JSON.stringify(formData)
@@ -99,4 +101,4 @@ const postFormData = async (formData) => {
 }
 
 
-export {ExerciseForm, FoodForm, BeverageForm}
+export {ExerciseForm, FoodForm, BeverageForm, getItems}
