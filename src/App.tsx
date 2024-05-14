@@ -77,39 +77,21 @@ const Item = (category, item, modalStatus, toggleModal) => {
 
 const Search = ({category, items}) => {
   const [results, setResults] = useState(items);
-  const [query, setQuery] = useState('')
   const [modalStatus, setModalStatus] = useState(null)
 
-
-
-  const search = (e) => {
-    if (/^[a-zA-Z]$/.test(e.key)) {
-      const q = query + e.key;
-      const matches = results.filter((match) => match.name.startsWith(q));
-      setQuery(q);
-      setResults(matches);
-    }
-    else if (e.key == 'Backspace') {
-      const q = query.substring(0, query.length - 1)
-      const matches = items.filter((result) => result.name.startsWith(q));
-      setQuery(q)
-      setResults(matches);
-    }
-
-  }
+  const search = (e) => setResults(items.filter((match) => match.name.startsWith(e.target.value)));
 
   return (
-      <>
-        <form className="search-form">
-          <input id="search-input" name="q" autoFocus onKeyDown={search} />
-        </form>
-        <div className="search-results">
+    <>
+      <form className="search-form">
+        <input id="search-input" name="q" autoFocus onChange={search} />
+      </form>
+      <div className="search-results">
         <ul>
           {results.map((result) => Item(category, result, modalStatus, setModalStatus))}
         </ul>
       </div>
-
-  </>
+    </>
   )
 }
 
