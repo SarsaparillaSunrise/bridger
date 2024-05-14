@@ -1,33 +1,39 @@
 import { useState } from 'react'
-import { ExerciseForm, IntakeForm} from './Forms';
+import { ExerciseForm, BeverageForm, FoodForm} from './Forms';
 import './App.css'
 
 const lifts = [
   {
     "id": 1,
+    "category": "compound-lift",
     "name": "squat",
   },
   {
     "id": 2,
+    "category": "compound-lift",
     "name": "deadlift",
   },
   {
     "id": 3,
+    "category": "compound-lift",
     "name": "bench press",
   }
 ]
 
-const foods = [
+const consumables = [
   {
     "id": 1,
+    "category": "beverage",
     "name": "coffee",
   },
   {
     "id": 2,
+    "category": "food",
     "name": "pistachio nuts",
   },
   {
     "id": 3,
+    "category": "food",
     "name": "toast",
   }
 ]
@@ -41,18 +47,26 @@ const Home = ({clickHandler}) => {
   )
 }
 
+const formRenderer = (category, item, toggleModal) => {
+  if (category === 'intake') {
+    if (item.category == 'food') {
+      return <FoodForm item={item} toggleModal={toggleModal} />
+    }
+      return <BeverageForm item={item} toggleModal={toggleModal} />
+  } else {
+    return <ExerciseForm item={item} toggleModal={toggleModal} />
+  }
+}
+
 const Item = (category, item, modalStatus, toggleModal) => {
   return (
     <div key={item.name}>
-      <button className="item-button" onClick={toggleModal}>{item.name}</button>
+      <button className="item-button" onClick={() => toggleModal(item.name)}>{item.name}</button>
       {
-        modalStatus ?
-          <div className="overlay" onClick={toggleModal}>
+        modalStatus == item.name ?
+          <div className="overlay">
           {
-            category == 'exercise' ?
-              <ExerciseForm item={item} toggleModal={toggleModal} />
-            :
-              <IntakeForm item={item} toggleModal={toggleModal} />
+            formRenderer(category, item, toggleModal)
           }
           </div>
           : null
@@ -64,8 +78,7 @@ const Item = (category, item, modalStatus, toggleModal) => {
 const Search = ({category, items}) => {
   const [results, setResults] = useState(items);
   const [query, setQuery] = useState('')
-  const [modalStatus, setModalStatus] = useState(false)
-  const toggleModal = () => setModalStatus(!modalStatus)
+  const [modalStatus, setModalStatus] = useState(null)
 
 
 
@@ -88,11 +101,11 @@ const Search = ({category, items}) => {
   return (
       <>
         <form className="search-form">
-          <input name="q" autoFocus onKeyDown={search} />
+          <input id="search-input" name="q" autoFocus onKeyDown={search} />
         </form>
         <div className="search-results">
         <ul>
-          {results.map((result) => Item(category, result, modalStatus, toggleModal))}
+          {results.map((result) => Item(category, result, modalStatus, setModalStatus))}
         </ul>
       </div>
 
@@ -102,7 +115,7 @@ const Search = ({category, items}) => {
 
 const App = () => {
   const [category, setCategory] = useState(null)
-  const data = {'exercise': lifts, 'intake': foods}
+  const data = {'exercise': lifts, 'intake': consumables}
 
   return (
       <div className="container">

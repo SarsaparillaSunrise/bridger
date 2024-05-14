@@ -87,5 +87,14 @@
 .overlay {
   position: fixed;
   inset: 0 0 0 0;
+  background-color: rgba(0,0,0);  /* Fallback */
   background-color: rgba(0,0,0,.8);
+}
+
+.close-modal {
+  position: absolute;
+  color: var(--secondary-colour);
+  top: .1rem;
+  right: 1.3rem;
+  font-size: 1.2em;
 }

@@ -11,6 +11,7 @@ const ExerciseForm = ({item, toggleModal}) => {
   return (
     <>
       <h1 className="form-title">{item.name}</h1>
+      <span className="close-modal" onClick={toggleModal}><p>&times;</p></span>
       <form className="entry-form" action={postForm}>
         <input name="id" type="hidden" defaultValue={item.id} readOnly />
         <p>
@@ -31,23 +32,52 @@ const ExerciseForm = ({item, toggleModal}) => {
   );
 }
 
-const IntakeForm = ({item, toggleModal}) => {
+const FoodForm = ({item, toggleModal}) => {
+  console.log('Rendering FooFo')
   const postForm = async (formData) => {
     await postFormData({
       "id": formData.get('id'),
       "weight": formData.get('weight'),
     })
+    // document.getElementById("search-input").reset()
     toggleModal()
   }
   return (
     <>
       <h1 className="form-title">{item.name}</h1>
+      <span className="close-modal" onClick={toggleModal}><p>&times;</p></span>
       <form className="entry-form" action={postForm}>
         <input name="id" type="hidden" defaultValue={item.id} readOnly />
         <p>
-          <label htmlFor="weight">Weight:</label>
+          <label htmlFor="weight">Weight (g):</label>
         </p>
         <input name="weight" type="number" min="1" inputMode="numeric" autoFocus />
+        <button className="submit-form" type="submit">Submit</button>
+      </form>
+    </>
+  );
+}
+
+const BeverageForm = ({item, toggleModal}) => {
+  console.log('Rendering BevFo')
+  const postForm = async (formData) => {
+    await postFormData({
+      "id": formData.get('id'),
+      "volume": formData.get('weight'),
+    })
+    // document.getElementById("search-input").reset()
+    toggleModal()
+  }
+  return (
+    <>
+      <h1 className="form-title">{item.name}</h1>
+      <span className="close-modal" onClick={toggleModal}><p>&times;</p></span>
+      <form className="entry-form" action={postForm}>
+        <input name="id" type="hidden" defaultValue={item.id} readOnly />
+        <p>
+          <label htmlFor="volume">Volume (ml):</label>
+        </p>
+        <input name="volume" type="number" min="1" inputMode="numeric" autoFocus />
         <button className="submit-form" type="submit">Submit</button>
       </form>
     </>
@@ -69,4 +99,4 @@ const postFormData = async (formData) => {
 }
 
 
-export {ExerciseForm, IntakeForm}
+export {ExerciseForm, FoodForm, BeverageForm}
