@@ -1,38 +1,19 @@
 import enum
-from typing import List
 
-from fastapi import FastAPI, Depends
-from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from sqlalchemy import create_engine, Column, DateTime, ForeignKey, Integer, Enum, String, Text
 from sqlalchemy.sql import func
-from sqlalchemy.orm import declarative_base, sessionmaker, Session
+from sqlalchemy import create_engine, Column, DateTime, ForeignKey, Integer, Enum, String, Text
+from sqlalchemy.orm import declarative_base, sessionmaker
 
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./sql_app.db"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
 SessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
 
+
 Base = declarative_base()
-
-app = FastAPI()
-
-origins = [
-    "http://localhost",
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-]
-
-app.add_middleware(
-    CORSMiddleware,
-    allow_origins=origins,
-    allow_credentials=True,
-    allow_methods=["*"],
-    allow_headers=["*"],
-)
 
 # Enums:
 
@@ -82,43 +63,36 @@ class Consumable(ItemBase):
     category = Column(Enum(ConsumableCategories), nullable=False)
 
 
-# Validators:
 
-class BaseValidator(BaseModel):
-    class Config:
-        from_attributes = True
+# Triggers:
 
+# from sqlalchemy import event, DDL
+# update_task_state = DDL('''\
+# CREATE TRIGGER update_task_state UPDATE OF state ON obs
+#   BEGIN
+#     UPDATE task SET state = 2 WHERE (obs_id = old.id) and (new.state = 2);
+#   END;''')
+# event.listen(Obs.__table__, 'after_create', update_task_state)
 
-class IntakeRead(BaseValidator):
-    id: int
-    category: str
-    name: str
+Base.metadata.drop_all(bind=engine)
+Base.metadata.create_all(bind=engine)
 
+steak = dict(name='Steak', category=ConsumableCategories.FOOD, calorie_base=100)
+coffee = dict(name='Coffee', category=ConsumableCategories.BEVERAGE, calorie_base=1)
+intake = dict(consumable_id=1, amount=500, calories=500)
+exercise = dict(name='Deadlift', weight=180, reps=1, category=ExerciseCategories.COMPOUND_LIFT)
+with SessionLocal() as session:
+    steak = Consumable(**steak)
+    coffee = Consumable(**coffee)
+    record2 = Intake(**intake)
+    lift = Exercise(**exercise)
+    session.add(steak)
+    session.add(coffee)
 
-class ExerciseRead(BaseValidator):
-    id: int
-    category: str
-    name: str
+    session.add(steak)
+    session.add(record2)
+    session.add(lift)
+    session.commit()
+    session.flush()
+    print(session.query(Consumable).all()[0].name)
 
-
-# Dependencies:
-
-def get_db():
-    db = SessionLocal()
-    try:
-        yield db
-    finally:
-        db.close()
-
-
-# Services:
-
-
-@app.get("/exercise", response_model=List[ExerciseRead])
-async def exercise(db: Session = Depends(get_db)):
-    return db.query(Exercise).all()
-
-
-@app.get("/intake", response_model=List[IntakeRead])
-async def intake(db: Session = Depends(get_db)):
-    return db.query(Consumable).all()

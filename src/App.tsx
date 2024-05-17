@@ -1,4 +1,4 @@
-import { useState } from 'react'
+import { useState, useEffect } from 'react'
 import { ExerciseForm, BeverageForm, FoodForm, getItems} from './Forms';
 import './App.css'
 
@@ -60,10 +60,18 @@ const Search = ({category, items}) => {
   )
 }
 
-const App = async () => {
+const App = () => {
   const [category, setCategory] = useState(null)
-  const data = {'exercise': await getItems('exercise'), 'intake': await getItems('intake')}
-  console.log(data)
+  const [data, setData] = useState()
+
+  // TODO: Find out why this runs twice
+  useEffect(() => {
+    const fetchData = async () => 
+      setData({'exercise': await getItems('exercise'), 'intake': await getItems('intake')});
+
+    fetchData()
+        .catch(console.error);;
+    }, [])
 
   return (
       <div className="container">
