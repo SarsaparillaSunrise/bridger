@@ -25,3 +25,6 @@ dist-ssr
 
 # Backend
 src/backend/.env/
+
+# Database:
+src/backend/db.sqlite3
