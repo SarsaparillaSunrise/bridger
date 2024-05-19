@@ -1,5 +1,5 @@
 import { useState, useEffect } from "react";
-import { ExerciseForm, BeverageForm, FoodForm, getItems } from "./Forms";
+import { ExerciseForm, BeverageForm, FoodForm } from "./Forms";
 import "./App.css";
 
 const Home = ({ clickHandler }) => {
@@ -30,6 +30,11 @@ const formRenderer = (item, toggleModal) => {
     return <ExerciseForm item={item} toggleModal={toggleModal} />;
   }
 };
+
+const getItems = async (category) =>
+  fetch("http://127.0.0.1:8000/" + category, { mode: "cors" })
+    .then((response) => response.json())
+    .catch((error) => console.error(error));
 
 const Item = (item, modalStatus, toggleModal) => {
   return (

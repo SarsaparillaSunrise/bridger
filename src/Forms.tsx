@@ -136,11 +136,6 @@ const postOptions = {
   body: null,
 };
 
-const getItems = async (category) =>
-  fetch(baseUri + category, { mode: "cors" })
-    .then((response) => response.json())
-    .catch((error) => console.error(error));
-
 const postFormData = async (category, formData) => {
   postOptions["body"] = JSON.stringify(formData);
   return fetch(baseUri + category, postOptions)
@@ -149,4 +144,4 @@ const postFormData = async (category, formData) => {
     .catch((error) => console.error(error));
 };
 
-export { ExerciseForm, FoodForm, BeverageForm, getItems };
+export { ExerciseForm, FoodForm, BeverageForm };
