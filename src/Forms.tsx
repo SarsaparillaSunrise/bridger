@@ -1,8 +1,8 @@
 const ExerciseForm = ({item, toggleModal}) => {
   const postForm = async (formData) => {
-    await postFormData({
-      "id": formData.get('id'),
-      "weight": formData.get('weight'),
+    await postFormData('workout', {
+      "exercise_id": formData.get('exercise_id'),
+      "volume": formData.get('volume'),
       "reps": formData.get('reps'),
       "notes": formData.get('notes'),
     })
@@ -13,11 +13,11 @@ const ExerciseForm = ({item, toggleModal}) => {
       <h1 className="form-title">{item.name}</h1>
       <span className="close-modal" onClick={toggleModal}><p>&times;</p></span>
       <form className="entry-form" action={postForm}>
-        <input name="id" type="hidden" defaultValue={item.id} readOnly />
+        <input name="exercise_id" type="hidden" defaultValue={item.id} readOnly />
         <p>
-          <label htmlFor="weight">Weight:</label>
+          <label htmlFor="volume">Volume:</label>
         </p>
-        <input name="weight" type="number" min="1" inputMode="numeric" required autoFocus />
+        <input name="volume" type="number" min="1" inputMode="numeric" required autoFocus />
         <p>
           <label htmlFor="reps">Rep count:</label>
         </p>
@@ -33,11 +33,10 @@ const ExerciseForm = ({item, toggleModal}) => {
 }
 
 const FoodForm = ({item, toggleModal}) => {
-  console.log('Rendering FooFo')
   const postForm = async (formData) => {
-    await postFormData({
-      "id": formData.get('id'),
-      "weight": formData.get('weight'),
+    await postFormData('intake', {
+      "consumable_id": formData.get('consumable_id'),
+      "volume": formData.get('volume'),
     })
     toggleModal()
   }
@@ -46,11 +45,11 @@ const FoodForm = ({item, toggleModal}) => {
       <h1 className="form-title">{item.name}</h1>
       <span className="close-modal" onClick={toggleModal}><p>&times;</p></span>
       <form className="entry-form" action={postForm}>
-        <input name="id" type="hidden" defaultValue={item.id} readOnly />
+        <input name="consumable_id" type="hidden" defaultValue={item.id} readOnly />
         <p>
-          <label htmlFor="weight">Weight (g):</label>
+          <label htmlFor="volume">Volume (g):</label>
         </p>
-        <input name="weight" type="number" min="1" inputMode="numeric" autoFocus />
+        <input name="volume" type="number" min="1" inputMode="numeric" autoFocus />
         <button className="submit-form" type="submit">Submit</button>
       </form>
     </>
@@ -58,11 +57,10 @@ const FoodForm = ({item, toggleModal}) => {
 }
 
 const BeverageForm = ({item, toggleModal}) => {
-  console.log('Rendering BevFo')
   const postForm = async (formData) => {
-    await postFormData({
-      "id": formData.get('id'),
-      "volume": formData.get('weight'),
+    await postFormData('intake', {
+      "consumable_id": formData.get('consumable_id'),
+      "volume": formData.get('volume'),
     })
     toggleModal()
   }
@@ -71,7 +69,7 @@ const BeverageForm = ({item, toggleModal}) => {
       <h1 className="form-title">{item.name}</h1>
       <span className="close-modal" onClick={toggleModal}><p>&times;</p></span>
       <form className="entry-form" action={postForm}>
-        <input name="id" type="hidden" defaultValue={item.id} readOnly />
+        <input name="consumable_id" type="hidden" defaultValue={item.id} readOnly />
         <p>
           <label htmlFor="volume">Volume (ml):</label>
         </p>
@@ -83,9 +81,12 @@ const BeverageForm = ({item, toggleModal}) => {
 }
 
 const baseUri = 'http://127.0.0.1:8000/'
-const options = {
+const postOptions = {
   method: 'POST',
   mode: 'cors',
+  headers: {
+      "Content-Type": "application/json",
+    },
   body: null
 }
 
@@ -93,9 +94,9 @@ const getItems = async (category) => fetch(baseUri + category, {mode: 'cors'})
   .then(response => response.json())
   .catch(error => console.error(error));
 
-const postFormData = async (formData) => {
-  options["body"] = JSON.stringify(formData)
-  return fetch(uri, options).then(response => response.json())
+const postFormData = async (category, formData) => {
+  postOptions["body"] = JSON.stringify(formData)
+  return fetch(baseUri + category, postOptions).then(response => response.json())
     .then(data => console.log(data.data))
     .catch(error => console.error(error));
 }

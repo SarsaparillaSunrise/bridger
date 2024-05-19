@@ -1,11 +1,13 @@
 import enum
 
+
+from sqlalchemy import create_engine
 from sqlalchemy.sql import func
-from sqlalchemy import create_engine, Column, DateTime, ForeignKey, Integer, Enum, String, Text
+from sqlalchemy import Column, DateTime, ForeignKey, Integer, Enum, String, Text
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./src/backend/db.sqlite3"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -62,17 +64,27 @@ class Intake(TemporalBase):
 
     consumable_id = Column(Integer, ForeignKey("consumable.id"), nullable=False)
     volume = Column(Integer, nullable=False)
-    calories = Column(Integer) # computed from Consumable.calories per 100G
+    calories = Column(Integer, nullable=False)
 
 
 class Workout(TemporalBase):
     __tablename__ = 'workout'
 
     exercise_id = Column(Integer, ForeignKey("exercise.id"), nullable=False)
-    weight = Column(Integer, nullable=False)
+    volume = Column(Integer, nullable=False)
     reps = Column(Integer, nullable=False)
     notes = Column(Text, nullable=True)
 
+
+# Triggers:
+
+# from sqlalchemy import event, DDL
+# update_task_state = DDL('''\
+# CREATE TRIGGER update_task_state UPDATE OF state ON obs
+#   BEGIN
+#     UPDATE task SET state = 2 WHERE (obs_id = old.id) and (new.state = 2);
+#   END;''')
+# event.listen(Obs.__table__, 'after_create', update_task_state)
 
 Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
@@ -88,7 +100,8 @@ eat_steak = dict(consumable_id=1, volume=500, calories=500)
 exercise = dict(name='Deadlift', category=ExerciseCategories.COMPOUND_LIFT)
 
 # Workout entry:
-lift = dict(exercise_id=1, weight=180, reps=1, notes='test note')
+lift = dict(exercise_id=1, volume=180, reps=1, notes='test note')
+noteless_lift = dict(exercise_id=1, volume=180, reps=1)
 
 
 with SessionLocal() as session:
@@ -97,12 +110,14 @@ with SessionLocal() as session:
     eat_steak = Intake(**eat_steak)
     deadlift = Exercise(**exercise)
     lift = Workout(**lift)
+    noteless_lift = Workout(**noteless_lift)
 
     session.add(steak)
     session.add(coffee)
     session.add(eat_steak)
     session.add(deadlift)
     session.add(lift)
+    session.add(noteless_lift)
 
     session.commit()
     session.flush()

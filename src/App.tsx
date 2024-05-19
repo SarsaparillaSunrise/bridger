@@ -7,23 +7,22 @@ const Home = ({clickHandler}) => {
   return (
     <div className="categories">
       <button className="category-selection" onClick={() => clickHandler('exercise')}>Exercise</button>
-      <button className="category-selection" onClick={() => clickHandler('intake')}>Intake</button>
+      <button className="category-selection" onClick={() => clickHandler('consumable')}>Consumable</button>
     </div>
   )
 }
 
-const formRenderer = (category, item, toggleModal) => {
-  if (category === 'intake') {
-    if (item.category == 'food') {
+const formRenderer = (item, toggleModal) => {
+    if (item.category == 'Food') {
       return <FoodForm item={item} toggleModal={toggleModal} />
-    }
+    } else if (item.category == 'Beverage') {
       return <BeverageForm item={item} toggleModal={toggleModal} />
-  } else {
+    } else {
     return <ExerciseForm item={item} toggleModal={toggleModal} />
   }
 }
 
-const Item = (category, item, modalStatus, toggleModal) => {
+const Item = (item, modalStatus, toggleModal) => {
   return (
     <div key={item.name}>
       <button className="item-button" onClick={() => toggleModal(item.name)}>{item.name}</button>
@@ -31,7 +30,7 @@ const Item = (category, item, modalStatus, toggleModal) => {
         modalStatus == item.name ?
           <div className="overlay">
           {
-            formRenderer(category, item, toggleModal)
+            formRenderer(item, toggleModal)
           }
           </div>
           : null
@@ -40,11 +39,12 @@ const Item = (category, item, modalStatus, toggleModal) => {
   )
 }
 
-const Search = ({category, items}) => {
+const Search = ({items}) => {
   const [results, setResults] = useState(items);
   const [modalStatus, setModalStatus] = useState(null)
 
-  const search = (e) => setResults(items.filter((match) => match.name.startsWith(e.target.value)));
+  const search = (e) => setResults(items.filter(
+    (match) => match.name.toLowerCase() .startsWith(e.target.value.toLowerCase())));
 
   return (
     <>
@@ -53,7 +53,7 @@ const Search = ({category, items}) => {
       </form>
       <div className="search-results">
         <ul>
-          {results.map((result) => Item(category, result, modalStatus, setModalStatus))}
+          {results.map((result) => Item(result, modalStatus, setModalStatus))}
         </ul>
       </div>
     </>
@@ -64,10 +64,10 @@ const App = () => {
   const [category, setCategory] = useState(null)
   const [data, setData] = useState()
 
-  // TODO: Find out why this runs twice
+  // TODO: Check this doesn't run twice in prod
   useEffect(() => {
     const fetchData = async () => 
-      setData({'exercise': await getItems('exercise'), 'intake': await getItems('intake')});
+      setData({'exercise': await getItems('exercise'), 'consumable': await getItems('consumable')});
 
     fetchData()
         .catch(console.error);;
@@ -80,7 +80,7 @@ const App = () => {
           category == null ?
             <Home clickHandler={setCategory}/>
           :
-            <Search category={category} items={data[category]} />
+            <Search items={data[category]} />
           }
         </main>
       </div>

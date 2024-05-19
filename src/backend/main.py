@@ -1,18 +1,16 @@
-import enum
-from datetime import datetime
-from typing import List, Optional
+from typing import List
 
 from fastapi import FastAPI, Depends, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
-from pydantic import BaseModel
-from sqlalchemy import create_engine, Column, DateTime, ForeignKey, Integer, Enum, String, Text
+from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import declarative_base, sessionmaker, Session
 
 from models import Consumable, Exercise, Intake, Workout
+from validators import ConsumableRead, ExerciseRead, IntakeCreate, IntakeRead, WorkoutCreate, WorkoutRead
 
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./src/backend/db.sqlite3"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -37,56 +35,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Enums:
-
-class ExerciseCategories(enum.Enum):
-    COMPOUND_LIFT = 'Compound Lift'
-    ACCESSORY = 'Accessory'
-    CARDIO = 'Cardio'
-
-class ConsumableCategories(enum.Enum):
-    FOOD = 'Food'
-    BEVERAGE = 'Beverage'
-
-
-# Models:
-
-# Validators:
-
-class BaseValidator(BaseModel):
-    class Config:
-        from_attributes = True
-
-
-class IntakeRead(BaseValidator):
-    id: int
-    volume: int
-    created_at: datetime
-
-
-class ExerciseRead(BaseValidator):
-    id: int
-    category: str
-    name: str
-
-
-class WorkoutCreate(BaseValidator):
-    exercise_id: int
-    weight: int
-    reps: int
-    notes: Optional[str]
-
-
-class IntakeCreate(BaseValidator):
-    consumable_id: int
-    volume: int
-
-
-class WorkoutRead(BaseValidator):
-    exercise_id: int
-    weight: int
-    reps: int
-    notes: Optional[str]
 
 # Dependencies:
 
@@ -97,18 +45,10 @@ def get_db():
     finally:
         db.close()
 
+# Data:
 
-# Services:
-
-
-@app.get("/exercise", response_model=List[ExerciseRead])
-async def exercise(db: Session = Depends(get_db)):
-    return db.query(Exercise).all()
-
-
-@app.get("/intake", response_model=List[IntakeRead])
-async def intake(db: Session = Depends(get_db)):
-    return db.query(Consumable).all()
+def get_record(session, model, record_id):
+    return session.query(model).filter(model.id == record_id).first()
 
 
 def insert_record(session, model, data):
@@ -123,9 +63,23 @@ def insert_record(session, model, data):
     return record
 
 
+# Services:
+
+@app.get("/exercise", response_model=List[ExerciseRead])
+async def exercise_list(db: Session = Depends(get_db)):
+    return db.query(Exercise).all()
+
+
+@app.get("/consumable", response_model=List[ConsumableRead])
+async def consumables_list(db: Session = Depends(get_db)):
+    return db.query(Consumable).all()
+
+
 @app.post("/intake", response_model=IntakeRead, status_code=201)
 async def intake_create(intake: IntakeCreate, session: Session = Depends(get_db)):
-    return insert_record(session=session, model=Intake, data=intake.model_dump())
+    consumable = get_record(session=session, model=Consumable, record_id=1)
+    data = dict(calories=consumable.calorie_base / 100 * intake.volume, **intake.model_dump())
+    return insert_record(session=session, model=Intake, data=data)
 
 
 @app.post("/workout", response_model=WorkoutRead, status_code=201)
