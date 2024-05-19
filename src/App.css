@@ -37,7 +37,7 @@
   color: var(--secondary-colour);
 }
 
-.entry-form input:not([type=checkbox]):not([type=radio]) {
+.entry-form input:not([type="checkbox"]):not([type="radio"]) {
   text-align: center;
   display: block;
   border-radius: 1em;
@@ -64,7 +64,7 @@
   color: var(--tertiary-colour);
 }
 
-.search-form input:not([type=checkbox]):not([type=radio]) {
+.search-form input:not([type="checkbox"]):not([type="radio"]) {
   text-align: center;
   display: block;
   border-radius: 1em;
@@ -87,14 +87,14 @@
 .overlay {
   position: fixed;
   inset: 0 0 0 0;
-  background-color: rgba(0,0,0);  /* Fallback */
-  background-color: rgba(0,0,0,.8);
+  background-color: rgba(0, 0, 0); /* Fallback */
+  background-color: rgba(0, 0, 0, 0.8);
 }
 
 .close-modal {
   position: absolute;
   color: var(--secondary-colour);
-  top: .1rem;
+  top: 0.1rem;
   right: 1.3rem;
   font-size: 1.2em;
 }

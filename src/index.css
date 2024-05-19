@@ -14,9 +14,12 @@
 body {
   margin: unset;
   background-colour: var(--secondary-colour);
-  font-family: -apple-system, -apple-system,
-                BlinkMacSystemFont, Verdana,
-                sans-serif; 
+  font-family:
+    -apple-system,
+    -apple-system,
+    BlinkMacSystemFont,
+    Verdana,
+    sans-serif;
 }
 
 button {
