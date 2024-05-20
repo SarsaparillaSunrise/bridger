@@ -1,3 +1,4 @@
+from os import environ
 from typing import List
 
 from fastapi import FastAPI, Depends, HTTPException
@@ -10,7 +11,7 @@ from models import Consumable, Exercise, Intake, Workout
 from validators import ConsumableRead, ExerciseRead, IntakeCreate, IntakeRead, WorkoutCreate, WorkoutRead
 
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./src/backend/db.sqlite3"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
@@ -21,15 +22,11 @@ Base = declarative_base()
 
 app = FastAPI(debug=True)
 
-origins = [
-    "http://localhost",
-    "http://127.0.0.1:3000",
-    "http://localhost:3000",
-]
-
 app.add_middleware(
     CORSMiddleware,
-    allow_origins=origins,
+    allow_origins=[
+        environ.get('ALLOWED_ORIGIN', ''),
+    ],
     allow_credentials=True,
     allow_methods=["*"],
     allow_headers=["*"],

@@ -7,7 +7,7 @@ from sqlalchemy import Column, DateTime, ForeignKey, Integer, Enum, String, Text
 from sqlalchemy.orm import declarative_base, sessionmaker
 
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./src/backend/db.sqlite3"
+SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
 
 engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
