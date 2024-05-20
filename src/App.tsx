@@ -1,8 +1,8 @@
-import { useState, useEffect } from "react";
-import { ExerciseForm, BeverageForm, FoodForm } from "./Forms";
+import {useState, useEffect} from "react";
+import {ExerciseForm, BeverageForm, FoodForm} from "./Forms";
 import "./App.css";
 
-const Home = ({ clickHandler }) => {
+const Home = ({clickHandler}) => {
   return (
     <div className="categories">
       <button
@@ -21,6 +21,9 @@ const Home = ({ clickHandler }) => {
   );
 };
 
+
+
+
 const formRenderer = (item, toggleModal) => {
   if (item.category == "Food") {
     return <FoodForm item={item} toggleModal={toggleModal} />;
@@ -32,7 +35,7 @@ const formRenderer = (item, toggleModal) => {
 };
 
 const getItems = async (category) =>
-  fetch("http://127.0.0.1:8000/" + category, { mode: "cors" })
+  fetch("http://127.0.0.1:8000/" + category, {mode: "cors"})
     .then((response) => response.json())
     .catch((error) => console.error(error));
 
@@ -49,7 +52,7 @@ const Item = (item, modalStatus, toggleModal) => {
   );
 };
 
-const Search = ({ items }) => {
+const Search = ({items}) => {
   const [results, setResults] = useState(items);
   const [modalStatus, setModalStatus] = useState(null);
 
