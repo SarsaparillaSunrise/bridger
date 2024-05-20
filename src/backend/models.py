@@ -56,6 +56,9 @@ class Consumable(ItemBase):
     __tablename__ = 'consumable'
 
     calorie_base = Column(Integer, nullable=False)
+    protein_mg = Column(Integer, nullable=False)
+    carbs_mg = Column(Integer, nullable=False)
+    fat_mg = Column(Integer, nullable=False)
     category = Column(Enum(ConsumableCategories), nullable=False)
 
 
@@ -90,11 +93,13 @@ Base.metadata.drop_all(bind=engine)
 Base.metadata.create_all(bind=engine)
 
 # Consumables:
-steak = dict(name='Steak', category=ConsumableCategories.FOOD, calorie_base=100)
-coffee = dict(name='Coffee', category=ConsumableCategories.BEVERAGE, calorie_base=1)
+# steak = dict(name='Steak', category=ConsumableCategories.FOOD, calorie_base=100)
+# coffee = dict(name='Coffee', category=ConsumableCategories.BEVERAGE, calorie_base=1)
+beer = dict(name='Beer', category=ConsumableCategories.BEVERAGE, calorie_base=100, protein_mg=300, fat_mg=0, carbs_mg=30)
 
 # Intake entry:
-eat_steak = dict(consumable_id=1, volume=500, calories=500)
+# eat_steak = dict(consumable_id=1, volume=500, calories=500)
+drink_beer = dict(consumable_id=1, volume=330, calories=130)
 
 # Exercise entry:
 exercise = dict(name='Deadlift', category=ExerciseCategories.COMPOUND_LIFT)
@@ -105,15 +110,18 @@ noteless_lift = dict(exercise_id=1, volume=180, reps=1)
 
 
 with SessionLocal() as session:
-    steak = Consumable(**steak)
-    coffee = Consumable(**coffee)
-    eat_steak = Intake(**eat_steak)
+    # steak = Consumable(**steak)
+    # coffee = Consumable(**coffee)
+    beer = Consumable(**beer)
+    # eat_steak = Intake(**eat_steak)
+    eat_steak = Intake(**drink_beer)
     deadlift = Exercise(**exercise)
     lift = Workout(**lift)
     noteless_lift = Workout(**noteless_lift)
 
-    session.add(steak)
-    session.add(coffee)
+    # session.add(steak)
+    # session.add(coffee)
+    session.add(beer)
     session.add(eat_steak)
     session.add(deadlift)
     session.add(lift)
