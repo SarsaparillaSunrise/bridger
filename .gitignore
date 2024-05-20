@@ -23,7 +23,10 @@ dist-ssr
 *.sln
 *.sw?
 
-# Backend
+# Environment Variable files: 
+*.env
+
+# Backend Virtual Environment:
 src/backend/.env/
 
 # Database:
