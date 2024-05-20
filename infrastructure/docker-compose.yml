@@ -1,0 +1,21 @@
+version: "3"
+
+services:
+  backend:
+    build:
+      context: "./src/backend"
+      dockerfile: "../../infrastructure/Dockerfile"
+    ports:
+      - "8000:8000/tcp"
+    volumes:
+      - "./src/backend:/app"
+    env_file:
+      - "backend.env"
+    command: ["fastapi", "run", "main.py", "--host", "0.0.0.0", "--port", "8000"]
+
+  nginx:
+    image: "nginx"
+    ports:
+      - "7500:80/tcp"
+    volumes:
+      - "./dist:/usr/share/nginx/html"
