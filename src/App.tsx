@@ -1,4 +1,4 @@
-import {useState, useEffect} from "react";
+import {Suspense, use, useState, useEffect} from "react";
 import {ExerciseForm, BeverageForm, FoodForm} from "./Forms";
 import "./App.css";
 
@@ -34,10 +34,10 @@ const formRenderer = (item, toggleModal) => {
   }
 };
 
-const getItems = async (category) =>
-  fetch("http://127.0.0.1:8000/" + category, {mode: "cors"})
-    .then((response) => response.json())
-    .catch((error) => console.error(error));
+const getItems = async (category) => {
+  const b = await fetch("http://127.0.0.1:8000/" + category, {mode: "cors"})
+  return b.json()
+}
 
 const Item = (item, modalStatus, toggleModal) => {
   return (
@@ -55,10 +55,11 @@ const Item = (item, modalStatus, toggleModal) => {
 const Search = ({items}) => {
   const [results, setResults] = useState(items);
   const [modalStatus, setModalStatus] = useState(null);
+  const data = use(items);
 
   const search = (e) =>
     setResults(
-      items.filter((match) =>
+      data.filter((match) =>
         match.name.toLowerCase().startsWith(e.target.value.toLowerCase()),
       ),
     );
@@ -70,38 +71,32 @@ const Search = ({items}) => {
       </form>
       <div className="search-results">
         <ul>
-          {results.map((result) => Item(result, modalStatus, setModalStatus))}
+          {data.map((result) => Item(result, modalStatus, setModalStatus))}
         </ul>
       </div>
     </>
   );
 };
 
+
 const App = () => {
   const [category, setCategory] = useState(null);
-  const [data, setData] = useState();
-
-  // TODO: Check this doesn't run twice in prod
-  useEffect(() => {
-    const fetchData = async () =>
-      setData({
-        exercise: await getItems("exercise"),
-        consumable: await getItems("consumable"),
-      });
-
-    fetchData().catch(console.error);
-  }, []);
+  const exercise = getItems('exercise')
+  const consumable = getItems('consumable')
+  const data = {'exercise': exercise, 'consumable': consumable}
 
   return (
-    <div className="container">
-      <main className="main">
-        {category == null ? (
-          <Home clickHandler={setCategory} />
-        ) : (
-          <Search items={data[category]} />
-        )}
-      </main>
-    </div>
+    <Suspense>
+      <div className="container">
+        <main className="main">
+          {category == null ? (
+            <Home clickHandler={setCategory} />
+          ) : (
+            <Search items={data[category]} />
+          )}
+        </main>
+      </div>
+    </Suspense>
   );
 };
 
