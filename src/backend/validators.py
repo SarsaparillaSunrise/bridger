@@ -23,8 +23,8 @@ class IntakeCreate(BaseValidator):
 class IntakeRead(BaseValidator):
     id: int
     volume: int
-    calories: int
-    created_at: datetime
+    # calories: int
+    # created_at: datetime
 
 
 class ExerciseRead(BaseValidator):
