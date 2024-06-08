@@ -1,7 +1,6 @@
-from datetime import datetime
 from typing import Optional
 
-from pydantic import BaseModel
+from pydantic import BaseModel, field_validator
 
 
 class BaseValidator(BaseModel):
@@ -25,6 +24,10 @@ class IntakeRead(BaseValidator):
     volume: int
     # calories: int
     # created_at: datetime
+
+    @field_validator("volume")
+    def convert_to_presentation_unit(cls, value) -> int:
+        return int(value / 1000.0)
 
 
 class ExerciseRead(BaseValidator):

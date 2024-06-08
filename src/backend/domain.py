@@ -68,3 +68,22 @@ class Workout:
     volume: int
     reps: int
     notes: str
+
+
+class Intake:
+    """
+    Table to store all consumption
+
+    Attributes:
+        consumable: a Consumable entry
+        volume: amount consumed
+    """
+
+    def __init__(self, consumable: Consumable, volume: int) -> None:
+        self._consumable = consumable
+        self.consumable_id = consumable.id
+        self.volume = volume * 1000  # Convert to MG/ML
+        self.calories = self._calculate_total_calories()
+
+    def _calculate_total_calories(self):
+        return int(self._consumable.calories * self.volume / 100_000.0)

@@ -1,4 +1,11 @@
-from domain import CategoryConsumable, CategoryExercise, Consumable, Exercise, Workout
+from domain import (
+    CategoryConsumable,
+    CategoryExercise,
+    Consumable,
+    Exercise,
+    Intake,
+    Workout,
+)
 from sqlalchemy import Column, Enum, ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.orm import registry
 
@@ -26,6 +33,14 @@ exercises = Table(
     Column("category", Enum(CategoryExercise), nullable=False),
 )
 
+intakes = Table(
+    "intakes",
+    metadata,
+    Column("id", Integer, primary_key=True, autoincrement=True),
+    Column("consumable_id", ForeignKey("consumables.id"), nullable=False),
+    Column("volume", Integer, nullable=False),
+    Column("calories", Integer, nullable=False),
+)
 
 workouts = Table(
     "workouts",
@@ -42,3 +57,4 @@ def start_mappers():
     mapper_registry.map_imperatively(class_=Consumable, local_table=consumables)
     mapper_registry.map_imperatively(class_=Exercise, local_table=exercises)
     mapper_registry.map_imperatively(class_=Workout, local_table=workouts)
+    mapper_registry.map_imperatively(class_=Intake, local_table=intakes)

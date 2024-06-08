@@ -1,14 +1,10 @@
 from os import environ
 from typing import List
 
-from fastapi import Depends, FastAPI, HTTPException
+from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from models import Consumable as ConsumableModel
-from models import Intake
-from repository import SQLAlchemyRepository
-from services import add_workout, list_consumables, list_exercises
+from services import add_intake, add_workout, list_consumables, list_exercises
 from sqlalchemy import create_engine
-from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 from validators import (
     ConsumableRead,
@@ -40,7 +36,6 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-
 # Dependencies:
 
 
@@ -50,21 +45,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-
-# Data:
-
-
-def insert_record(session, model, data):
-    record = model(**data)
-    session.add(record)
-    try:
-        session.flush()
-        session.commit()
-    except IntegrityError:
-        raise HTTPException(status_code=409, detail="Record not added")
-    session.refresh(record)
-    return record
 
 
 # Services:
@@ -82,12 +62,7 @@ async def exercise_list(session: Session = Depends(get_db)):
 
 @app.post("/intake", response_model=IntakeRead, status_code=201)
 async def intake_create(intake: IntakeCreate, session: Session = Depends(get_db)):
-    repository = SQLAlchemyRepository(session)
-    consumable = repository.get(model=ConsumableModel, record_id=1)
-    data = dict(
-        calories=consumable.calorie_base / 100 * intake.volume, **intake.model_dump()
-    )
-    return insert_record(session=session, model=Intake, data=data)
+    return add_intake(session=session, intake=intake)
 
 
 @app.post("/workout", response_model=WorkoutRead, status_code=201)

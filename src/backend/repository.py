@@ -5,7 +5,7 @@ from domain import Consumable
 
 class AbstractRepository(abc.ABC):
     """
-    Port for DB adapter
+    Port for SQLAlchemy Adapter
     """
 
     @abc.abstractmethod
@@ -21,7 +21,7 @@ class AbstractRepository(abc.ABC):
         raise NotImplementedError
 
     @abc.abstractmethod
-    def add(self, record):
+    def create(self, record):
         raise NotImplementedError
 
 
@@ -33,9 +33,9 @@ class SQLAlchemyRepository(AbstractRepository):
         return self._session.query(model).all()
 
     def get(self, model: Consumable, record_id: int) -> Consumable:
-        return self._session.query(model).filter(model.id == record_id).first()
+        return self._session.get(model, record_id)
 
-    def add(self, record):
+    def create(self, record):
         self._session.add(record)
         self._session.commit()
         self._session.refresh(record)
