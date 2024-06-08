@@ -7,6 +7,12 @@ class CategoryConsumable(Enum):
     BEVERAGE = "BEVERAGE"
 
 
+class CategoryExercise(Enum):
+    COMPOUND_LIFT = "Compound Lift"
+    ACCESSORY = "Accessory"
+    CARDIO = "Cardio"
+
+
 @dataclass
 class Consumable:
     """
@@ -28,3 +34,18 @@ class Consumable:
     protein: int
     carbohydrate: int
     fat: int
+
+
+@dataclass
+class Exercise:
+    """
+    An exercise
+
+
+    Attributes:
+        name: Name
+        category: COMPOUND_LIFT or ACCESSORY
+    """
+
+    name: str
+    category: CategoryExercise

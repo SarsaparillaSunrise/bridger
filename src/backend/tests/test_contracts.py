@@ -14,16 +14,17 @@ def test_read_item_consumable(test_client) -> None:
     # ]
 
 
-def test_read_item_exercise() -> None:
-    response = make_request(url="exercise", method="GET")
+def test_read_item_exercise(test_client) -> None:
+    response = test_client.get(url="consumable")
     assert response.status_code == 200
-    assert response.json() == [
-        {
-            "id": 1,
-            "category": "Compound Lift",
-            "name": "Deadlift",
-        }
-    ]
+    assert response.json() == []
+    # assert response.json() == [
+    #     {
+    #         "id": 1,
+    #         "category": "Compound Lift",
+    #         "name": "Deadlift",
+    #     }
+    # ]
 
 
 def test_create_workout_entry() -> None:

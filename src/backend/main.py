@@ -1,11 +1,11 @@
 from os import environ
 from typing import List
 
-from domain import Consumable
+from domain import Consumable, Exercise
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from models import Consumable as ConsumableModel
-from models import Exercise, Intake, Workout
+from models import Intake, Workout
 from repository import SQLAlchemyRepository
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
@@ -77,8 +77,9 @@ async def consumables_list(session: Session = Depends(get_db)):
 
 
 @app.get("/exercise", response_model=List[ExerciseRead])
-async def exercise_list(db: Session = Depends(get_db)):
-    return db.query(Exercise).all()
+async def exercise_list(session: Session = Depends(get_db)):
+    repository = SQLAlchemyRepository(session)
+    return repository.list(model=Exercise)
 
 
 @app.post("/intake", response_model=IntakeRead, status_code=201)
