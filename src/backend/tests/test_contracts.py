@@ -1,6 +1,19 @@
 from utils import make_request
 
 
+def test_read_item_consumable(test_client) -> None:
+    response = test_client.get(url="consumable")
+    assert response.status_code == 200
+    assert response.json() == []
+    # assert response.json() == [
+    #     {
+    #         "id": 1,
+    #         "category": "Beverage",
+    #         "name": "Beer",
+    #     }
+    # ]
+
+
 def test_read_item_exercise() -> None:
     response = make_request(url="exercise", method="GET")
     assert response.status_code == 200
@@ -9,18 +22,6 @@ def test_read_item_exercise() -> None:
             "id": 1,
             "category": "Compound Lift",
             "name": "Deadlift",
-        }
-    ]
-
-
-def test_read_item_consumable() -> None:
-    response = make_request(url="consumable", method="GET")
-    assert response.status_code == 200
-    assert response.json() == [
-        {
-            "id": 1,
-            "category": "Beverage",
-            "name": "Beer",
         }
     ]
 

@@ -1,15 +1,23 @@
 from os import environ
 from typing import List
 
-from fastapi import FastAPI, Depends, HTTPException
+from domain import Consumable
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
+from models import Consumable as ConsumableModel
+from models import Exercise, Intake, Workout
+from repository import SQLAlchemyRepository
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
-from sqlalchemy.orm import declarative_base, sessionmaker, Session
-
-from models import Consumable, Exercise, Intake, Workout
-from validators import ConsumableRead, ExerciseRead, IntakeCreate, IntakeRead, WorkoutCreate, WorkoutRead
-
+from sqlalchemy.orm import Session, declarative_base, sessionmaker
+from validators import (
+    ConsumableRead,
+    ExerciseRead,
+    IntakeCreate,
+    IntakeRead,
+    WorkoutCreate,
+    WorkoutRead,
+)
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
 
@@ -25,7 +33,7 @@ app = FastAPI(debug=True)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        environ.get('ALLOWED_ORIGIN', ''),
+        environ.get("ALLOWED_ORIGIN", ""),
     ],
     allow_credentials=True,
     allow_methods=["*"],
@@ -35,6 +43,7 @@ app.add_middleware(
 
 # Dependencies:
 
+
 def get_db():
     db = SessionLocal()
     try:
@@ -42,7 +51,9 @@ def get_db():
     finally:
         db.close()
 
+
 # Data:
+
 
 def get_record(session, model, record_id):
     return session.query(model).filter(model.id == record_id).first()
@@ -55,27 +66,31 @@ def insert_record(session, model, data):
         session.flush()
         session.commit()
     except IntegrityError:
-        raise HTTPException(status_code=409, detail='Record not added')
+        raise HTTPException(status_code=409, detail="Record not added")
     session.refresh(record)
     return record
 
 
 # Services:
 
+
+@app.get("/consumable", response_model=List[ConsumableRead])
+async def consumables_list(session: Session = Depends(get_db)):
+    repository = SQLAlchemyRepository(session)
+    return repository.list(Consumable)
+
+
 @app.get("/exercise", response_model=List[ExerciseRead])
 async def exercise_list(db: Session = Depends(get_db)):
     return db.query(Exercise).all()
 
 
-@app.get("/consumable", response_model=List[ConsumableRead])
-async def consumables_list(db: Session = Depends(get_db)):
-    return db.query(Consumable).all()
-
-
 @app.post("/intake", response_model=IntakeRead, status_code=201)
 async def intake_create(intake: IntakeCreate, session: Session = Depends(get_db)):
-    consumable = get_record(session=session, model=Consumable, record_id=1)
-    data = dict(calories=consumable.calorie_base / 100 * intake.volume, **intake.model_dump())
+    consumable = get_record(session=session, model=ConsumableModel, record_id=1)
+    data = dict(
+        calories=consumable.calorie_base / 100 * intake.volume, **intake.model_dump()
+    )
     return insert_record(session=session, model=Intake, data=data)
 
 
