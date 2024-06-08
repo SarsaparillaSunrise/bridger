@@ -49,3 +49,22 @@ class Exercise:
 
     name: str
     category: CategoryExercise
+
+
+@dataclass
+class Workout:
+    """
+    Table to store all exercises
+
+
+    Attributes:
+        exercise_id: an Exercise entry
+        volume: volume trained
+        reps: repetitions performed
+        notes: optional notes
+    """
+
+    exercise_id: int
+    volume: int
+    reps: int
+    notes: str
