@@ -1,13 +1,12 @@
 from os import environ
 from typing import List
 
-from domain import Workout
 from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from models import Consumable as ConsumableModel
 from models import Intake
 from repository import SQLAlchemyRepository
-from services import list_consumables, list_exercises
+from services import add_workout, list_consumables, list_exercises
 from sqlalchemy import create_engine
 from sqlalchemy.exc import IntegrityError
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
@@ -93,5 +92,4 @@ async def intake_create(intake: IntakeCreate, session: Session = Depends(get_db)
 
 @app.post("/workout", response_model=WorkoutRead, status_code=201)
 async def workout_create(workout: WorkoutCreate, session: Session = Depends(get_db)):
-    repository = SQLAlchemyRepository(session)
-    return repository.add(Workout(**workout.model_dump()))
+    return add_workout(session=session, workout=workout)
