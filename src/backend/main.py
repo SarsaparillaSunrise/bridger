@@ -55,10 +55,6 @@ def get_db():
 # Data:
 
 
-def get_record(session, model, record_id):
-    return session.query(model).filter(model.id == record_id).first()
-
-
 def insert_record(session, model, data):
     record = model(**data)
     session.add(record)
@@ -87,7 +83,8 @@ async def exercise_list(db: Session = Depends(get_db)):
 
 @app.post("/intake", response_model=IntakeRead, status_code=201)
 async def intake_create(intake: IntakeCreate, session: Session = Depends(get_db)):
-    consumable = get_record(session=session, model=ConsumableModel, record_id=1)
+    repository = SQLAlchemyRepository(session)
+    consumable = repository.get(model=ConsumableModel, record_id=1)
     data = dict(
         calories=consumable.calorie_base / 100 * intake.volume, **intake.model_dump()
     )
