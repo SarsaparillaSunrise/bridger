@@ -96,4 +96,3 @@ async def intake_create(intake: IntakeCreate, session: Session = Depends(get_db)
 async def workout_create(workout: WorkoutCreate, session: Session = Depends(get_db)):
     repository = SQLAlchemyRepository(session)
     return repository.add(Workout(**workout.model_dump()))
-    return insert_record(session=session, model=Workout, data=workout.model_dump())
