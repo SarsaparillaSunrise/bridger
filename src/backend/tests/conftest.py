@@ -4,6 +4,7 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
+import domain
 from main import app, get_db
 from orm import metadata, start_mappers
 
@@ -64,11 +65,33 @@ def session():
     connection.close()
 
 
+@pytest.fixture()
+def populated_session(session):
+    consumable = domain.Consumable(
+        name="Test Food",
+        category=domain.CategoryConsumable.FOOD,
+        calories=100,
+        protein=100,
+        carbohydrate=100,
+        fat=100,
+    )
+    session.add(consumable)
+    session.commit()
+
+    exercise = domain.Exercise(
+        name="Test Exercise", category=domain.CategoryExercise.COMPOUND_LIFT
+    )
+    session.add(exercise)
+    session.commit()
+
+    yield session
+
+
 # Use session fixture, instead of creating a new session
 @pytest.fixture()
-def test_client(session):
+def test_client(populated_session):
     def override_get_db():
-        yield session
+        yield populated_session
 
     app.dependency_overrides[get_db] = override_get_db
     yield TestClient(app)
