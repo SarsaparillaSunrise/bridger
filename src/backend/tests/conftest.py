@@ -1,10 +1,11 @@
 import pytest
 import sqlalchemy as sa
 from fastapi.testclient import TestClient
-from main import app, get_db
-from orm import metadata, start_mappers
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
+
+from main import app, get_db
+from orm import metadata, start_mappers
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 

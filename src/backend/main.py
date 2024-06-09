@@ -3,9 +3,10 @@ from typing import List
 
 from fastapi import Depends, FastAPI
 from fastapi.middleware.cors import CORSMiddleware
-from services import add_intake, add_workout, list_consumables, list_exercises
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
+
+from services import add_intake, add_workout, list_consumables, list_exercises
 from validators import (
     ConsumableRead,
     ExerciseRead,

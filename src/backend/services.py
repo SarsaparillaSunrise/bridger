@@ -1,7 +1,8 @@
-from domain import Consumable, Exercise, Intake, Workout
 from fastapi.exceptions import HTTPException
-from repository import SQLAlchemyRepository
 from sqlalchemy.orm import Session
+
+from domain import Consumable, Exercise, Intake, Workout
+from repository import SQLAlchemyRepository
 
 
 def add_intake(session: Session, intake: Intake) -> Intake:

@@ -1,3 +1,6 @@
+from sqlalchemy import Column, Enum, ForeignKey, Integer, MetaData, String, Table
+from sqlalchemy.orm import registry
+
 from domain import (
     CategoryConsumable,
     CategoryExercise,
@@ -6,8 +9,6 @@ from domain import (
     Intake,
     Workout,
 )
-from sqlalchemy import Column, Enum, ForeignKey, Integer, MetaData, String, Table
-from sqlalchemy.orm import registry
 
 metadata = MetaData()
 mapper_registry = registry()
