@@ -66,8 +66,8 @@ def session():
 
 
 @pytest.fixture()
-def populated_session(session):
-    consumable = domain.Consumable(
+def expected_consumable():
+    return domain.Consumable(
         name="Test Food",
         category=domain.CategoryConsumable.FOOD,
         calories=100,
@@ -75,13 +75,19 @@ def populated_session(session):
         carbohydrate=100,
         fat=100,
     )
-    session.add(consumable)
-    session.commit()
 
-    exercise = domain.Exercise(
+
+@pytest.fixture()
+def expected_exercise():
+    return domain.Exercise(
         name="Test Exercise", category=domain.CategoryExercise.COMPOUND_LIFT
     )
-    session.add(exercise)
+
+
+@pytest.fixture()
+def populated_session(session, expected_consumable, expected_exercise):
+    session.add(expected_consumable)
+    session.add(expected_exercise)
     session.commit()
 
     yield session
