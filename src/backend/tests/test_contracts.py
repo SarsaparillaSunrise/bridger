@@ -1,35 +1,48 @@
 import domain
 
 
-def test_read_item_consumable(test_client) -> None:
+def test_read_item_consumable(test_client, session) -> None:
+    consumable = domain.Consumable(
+        name="Test Food",
+        category=domain.CategoryConsumable.FOOD,
+        calories=100,
+        protein=100,
+        carbohydrate=100,
+        fat=100,
+    )
+    session.add(consumable)
+    session.commit()
     response = test_client.get(url="consumable")
     assert response.status_code == 200
-    assert response.json() == []
-    # assert response.json() == [
-    #     {
-    #         "id": 1,
-    #         "category": "Beverage",
-    #         "name": "Beer",
-    #     }
-    # ]
+    assert response.json() == [
+        {
+            "id": 1,
+            "category": "FOOD",
+            "name": "Test Food",
+        }
+    ]
 
 
-def test_read_item_exercise(test_client) -> None:
+def test_read_item_exercise(test_client, session) -> None:
+    exercise = domain.Exercise(
+        name="Test Exercise", category=domain.CategoryExercise.COMPOUND_LIFT
+    )
+    session.add(exercise)
+    session.commit()
     response = test_client.get(url="exercise")
     assert response.status_code == 200
-    assert response.json() == []
-    # assert response.json() == [
-    #     {
-    #         "id": 1,
-    #         "category": "Compound Lift",
-    #         "name": "Deadlift",
-    #     }
-    # ]
+    assert response.json() == [
+        {
+            "id": 1,
+            "category": "Compound Lift",
+            "name": "Test Exercise",
+        }
+    ]
 
 
 def test_create_workout_entry(test_client, session) -> None:
     exercise = domain.Exercise(
-        name="Test exercise", category=domain.CategoryExercise.COMPOUND_LIFT
+        name="Test Exercise", category=domain.CategoryExercise.COMPOUND_LIFT
     )
     session.add(exercise)
     session.commit()
