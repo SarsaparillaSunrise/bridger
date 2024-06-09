@@ -16,7 +16,7 @@ repos:
         args: [--fix]
       # Sort imports
       - id: ruff
-        args: ["check", "--select", "I", "--fix", "--config", "[src/backend]"]
+        args: ["check", "--select", "I", "--fix", "--config", "src = ['src/backend']"]
       # Run the formatter.
       - id: ruff-format
 
