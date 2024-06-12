@@ -1,6 +1,16 @@
 def test_read_item_consumable(test_client) -> None:
     response = test_client.get(url="consumable")
-    assert response.json() == [dict(id=1, category="FOOD", name="Test Food")]
+    assert response.json() == [
+        dict(
+            id=1,
+            category="FOOD",
+            name="Test Food",
+            calories=100,
+            protein=100,
+            carbohydrate=100,
+            fat=100,
+        )
+    ]
     assert response.status_code == 200
 
 
