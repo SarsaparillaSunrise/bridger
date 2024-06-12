@@ -1,20 +1,19 @@
-from fastapi.exceptions import HTTPException
-from sqlalchemy.orm import Session
-
 from adapters.repository import SQLAlchemyRepository
 from domain import validators
 from domain.model import Consumable, Exercise, Intake, Workout
 
 
-def add_intake(
-    session: Session, intake: validators.IntakeCreate
-) -> validators.IntakeRead:
+class IntegrityException(Exception):
+    pass
+
+
+def add_intake(session, intake: validators.IntakeCreate) -> validators.IntakeRead:
     repository: SQLAlchemyRepository = SQLAlchemyRepository(session)
     consumable: Consumable = repository.get(
         model=Consumable, record_id=intake.consumable_id
     )
     if not consumable:
-        raise HTTPException(status_code=422, detail="Integrity Error")
+        raise IntegrityException
     record = repository.create(Intake(consumable=consumable, volume=intake.volume))
     record.calculate_intake_presentation_values()
     return validators.IntakeRead(

@@ -1,7 +1,7 @@
 from os import environ
 from typing import List
 
-from fastapi import Depends, FastAPI
+from fastapi import Depends, FastAPI, HTTPException
 from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
@@ -41,9 +41,6 @@ def get_db():
         db.close()
 
 
-# Services:
-
-
 @app.get("/consumable", response_model=List[validators.ConsumableRead])
 async def consumables_list(session: Session = Depends(get_db)):
     return handlers.list_consumables(session=session)
@@ -58,7 +55,10 @@ async def exercise_list(session: Session = Depends(get_db)):
 async def intake_create(
     intake: validators.IntakeCreate, session: Session = Depends(get_db)
 ):
-    return handlers.add_intake(session=session, intake=intake)
+    try:
+        return handlers.add_intake(session=session, intake=intake)
+    except handlers.IntegrityException:
+        raise HTTPException(status_code=422, detail="Integrity Error")
 
 
 @app.post("/workout", response_model=validators.WorkoutRead, status_code=201)
