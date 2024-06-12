@@ -6,15 +6,8 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
-from services import add_intake, add_workout, list_consumables, list_exercises
-from validators import (
-    ConsumableRead,
-    ExerciseRead,
-    IntakeCreate,
-    IntakeRead,
-    WorkoutCreate,
-    WorkoutRead,
-)
+from domain import validators
+from services import handlers
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
 
@@ -51,21 +44,25 @@ def get_db():
 # Services:
 
 
-@app.get("/consumable", response_model=List[ConsumableRead])
+@app.get("/consumable", response_model=List[validators.ConsumableRead])
 async def consumables_list(session: Session = Depends(get_db)):
-    return list_consumables(session=session)
+    return handlers.list_consumables(session=session)
 
 
-@app.get("/exercise", response_model=List[ExerciseRead])
+@app.get("/exercise", response_model=List[validators.ExerciseRead])
 async def exercise_list(session: Session = Depends(get_db)):
-    return list_exercises(session=session)
+    return handlers.list_exercises(session=session)
 
 
-@app.post("/intake", response_model=IntakeRead, status_code=201)
-async def intake_create(intake: IntakeCreate, session: Session = Depends(get_db)):
-    return add_intake(session=session, intake=intake)
+@app.post("/intake", response_model=validators.IntakeRead, status_code=201)
+async def intake_create(
+    intake: validators.IntakeCreate, session: Session = Depends(get_db)
+):
+    return handlers.add_intake(session=session, intake=intake)
 
 
-@app.post("/workout", response_model=WorkoutRead, status_code=201)
-async def workout_create(workout: WorkoutCreate, session: Session = Depends(get_db)):
-    return add_workout(session=session, workout=workout)
+@app.post("/workout", response_model=validators.WorkoutRead, status_code=201)
+async def workout_create(
+    workout: validators.WorkoutCreate, session: Session = Depends(get_db)
+):
+    return handlers.add_workout(session=session, workout=workout)

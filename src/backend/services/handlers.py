@@ -1,9 +1,9 @@
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 
-import validators
 from adapters.repository import SQLAlchemyRepository
-from domain import Consumable, Exercise, Intake, Workout
+from domain import validators
+from domain.model import Consumable, Exercise, Intake, Workout
 
 
 def add_intake(

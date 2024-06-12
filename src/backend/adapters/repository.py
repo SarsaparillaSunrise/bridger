@@ -1,6 +1,6 @@
 import abc
 
-from domain import Consumable
+from domain.model import Consumable
 
 
 class AbstractRepository(abc.ABC):

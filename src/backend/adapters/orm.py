@@ -1,14 +1,7 @@
 from sqlalchemy import Column, Enum, ForeignKey, Integer, MetaData, String, Table
 from sqlalchemy.orm import registry
 
-from domain import (
-    CategoryConsumable,
-    CategoryExercise,
-    Consumable,
-    Exercise,
-    Intake,
-    Workout,
-)
+from domain import model
 
 metadata = MetaData()
 mapper_registry = registry()
@@ -18,7 +11,7 @@ consumables = Table(
     metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("name", String, nullable=False),
-    Column("category", Enum(CategoryConsumable), nullable=False),
+    Column("category", Enum(model.CategoryConsumable), nullable=False),
     Column("calories", Integer, nullable=False),
     Column("protein", Integer, nullable=False),
     Column("carbohydrate", Integer, nullable=False),
@@ -31,7 +24,7 @@ exercises = Table(
     metadata,
     Column("id", Integer, primary_key=True, autoincrement=True),
     Column("name", String, nullable=False),
-    Column("category", Enum(CategoryExercise), nullable=False),
+    Column("category", Enum(model.CategoryExercise), nullable=False),
 )
 
 intakes = Table(
@@ -55,7 +48,7 @@ workouts = Table(
 
 
 def start_mappers():
-    mapper_registry.map_imperatively(class_=Consumable, local_table=consumables)
-    mapper_registry.map_imperatively(class_=Exercise, local_table=exercises)
-    mapper_registry.map_imperatively(class_=Workout, local_table=workouts)
-    mapper_registry.map_imperatively(class_=Intake, local_table=intakes)
+    mapper_registry.map_imperatively(class_=model.Consumable, local_table=consumables)
+    mapper_registry.map_imperatively(class_=model.Exercise, local_table=exercises)
+    mapper_registry.map_imperatively(class_=model.Workout, local_table=workouts)
+    mapper_registry.map_imperatively(class_=model.Intake, local_table=intakes)

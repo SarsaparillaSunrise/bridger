@@ -4,9 +4,9 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-import domain
+from adapters.orm import metadata, start_mappers
+from domain import model
 from main import app, get_db
-from orm import metadata, start_mappers
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
 
@@ -67,9 +67,9 @@ def session():
 
 @pytest.fixture()
 def beverage_fixture():
-    return domain.Consumable(
+    return model.Consumable(
         name="Test Drink",
-        category=domain.CategoryConsumable.BEVERAGE,
+        category=model.CategoryConsumable.BEVERAGE,
         calories=100,
         protein=100,
         carbohydrate=100,
@@ -79,9 +79,9 @@ def beverage_fixture():
 
 @pytest.fixture()
 def food_fixture():
-    return domain.Consumable(
+    return model.Consumable(
         name="Test Food",
-        category=domain.CategoryConsumable.FOOD,
+        category=model.CategoryConsumable.FOOD,
         calories=100,
         protein=100,
         carbohydrate=100,
@@ -91,8 +91,8 @@ def food_fixture():
 
 @pytest.fixture()
 def exercise_fixture():
-    return domain.Exercise(
-        name="Test Exercise", category=domain.CategoryExercise.COMPOUND_LIFT
+    return model.Exercise(
+        name="Test Exercise", category=model.CategoryExercise.COMPOUND_LIFT
     )
 
 

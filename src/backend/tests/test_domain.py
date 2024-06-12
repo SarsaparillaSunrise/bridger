@@ -1,4 +1,4 @@
-from domain import Intake
+from domain.model import Intake
 
 
 def test_food_intake_volume_stored_in_milligrams(food_fixture):
