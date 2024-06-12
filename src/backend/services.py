@@ -1,18 +1,14 @@
 from fastapi.exceptions import HTTPException
 from sqlalchemy.orm import Session
 
+import validators
+from adapters.repository import SQLAlchemyRepository
 from domain import Consumable, Exercise, Intake, Workout
-from repository import SQLAlchemyRepository
-from validators import (
-    ConsumableRead,
-    ExerciseRead,
-    IntakeCreate,
-    IntakeRead,
-    WorkoutRead,
-)
 
 
-def add_intake(session: Session, intake: IntakeCreate) -> IntakeRead:
+def add_intake(
+    session: Session, intake: validators.IntakeCreate
+) -> validators.IntakeRead:
     repository: SQLAlchemyRepository = SQLAlchemyRepository(session)
     consumable: Consumable = repository.get(
         model=Consumable, record_id=intake.consumable_id
@@ -21,13 +17,15 @@ def add_intake(session: Session, intake: IntakeCreate) -> IntakeRead:
         raise HTTPException(status_code=422, detail="Integrity Error")
     record = repository.create(Intake(consumable=consumable, volume=intake.volume))
     record.calculate_intake_presentation_values()
-    return IntakeRead(consumable=consumable, id=record.id, volume=record.volume)
+    return validators.IntakeRead(
+        consumable=consumable, id=record.id, volume=record.volume
+    )
 
 
-def add_workout(session, workout) -> WorkoutRead:
+def add_workout(session, workout) -> validators.WorkoutRead:
     repository = SQLAlchemyRepository(session)
     record = repository.create(Workout(**workout.model_dump()))
-    return WorkoutRead(
+    return validators.WorkoutRead(
         id=record.id,
         exercise_id=record.exercise_id,
         volume=record.volume,
@@ -36,13 +34,13 @@ def add_workout(session, workout) -> WorkoutRead:
     )
 
 
-def list_consumables(session) -> ConsumableRead:
+def list_consumables(session) -> validators.ConsumableRead:
     repository = SQLAlchemyRepository(session)
     records = repository.list(Consumable)
-    return [ConsumableRead(**c.__dict__) for c in records]
+    return [validators.ConsumableRead(**c.__dict__) for c in records]
 
 
 def list_exercises(session):
     repository = SQLAlchemyRepository(session)
     records = repository.list(Exercise)
-    return [ExerciseRead(**e.__dict__) for e in records]
+    return [validators.ExerciseRead(**e.__dict__) for e in records]
