@@ -1,15 +1,9 @@
 import services
-from validators import (
-    ConsumableRead,
-    ExerciseRead,
-    IntakeCreate,
-    WorkoutCreate,
-    WorkoutRead,
-)
+import validators
 
 
 def test_list_consumables(session, food_fixture):
-    expected = ConsumableRead(
+    expected = validators.ConsumableRead(
         id=1,
         category="FOOD",
         name="Test Food",
@@ -24,34 +18,40 @@ def test_list_consumables(session, food_fixture):
 
 
 def test_list_exercises(session, exercise_fixture):
-    expected = ExerciseRead(id=1, name="Test Exercise", category="Compound Lift")
+    expected = validators.ExerciseRead(
+        id=1, name="Test Exercise", category="Compound Lift"
+    )
     session.add(exercise_fixture)
     session.commit()
     assert services.list_exercises(session) == [expected]
 
 
 def test_add_workout(session, exercise_fixture):
-    session.add(exercise_fixture)
-    session.commit()
-    workout = WorkoutCreate(exercise_id=1, volume=200, reps=1, notes="Test exercise")
-    assert services.add_workout(session=session, workout=workout) == WorkoutRead(
+    expected = validators.WorkoutRead(
         exercise_id=1, volume=200, reps=1, notes="Test exercise"
     )
+    session.add(exercise_fixture)
+    session.commit()
+
+    workout = validators.WorkoutCreate(
+        exercise_id=1, volume=200, reps=1, notes="Test exercise"
+    )
+    assert services.add_workout(session=session, workout=workout) == expected
 
 
 def test_add_food_intake(session, food_fixture):
+    expected = validators.IntakeRead(id=1, volume=100)
     session.add(food_fixture)
     session.commit()
-    intake = IntakeCreate(consumable_id=food_fixture.id, volume=100)
+    intake = validators.IntakeCreate(consumable_id=food_fixture.id, volume=100)
     result = services.add_intake(session=session, intake=intake)
-    assert result.id == food_fixture.id
-    assert result.volume == 100
+    assert result == expected
 
 
 def test_add_beverage_intake(session, beverage_fixture):
+    expected = validators.IntakeRead(id=1, volume=500)
     session.add(beverage_fixture)
     session.commit()
-    intake = IntakeCreate(consumable_id=beverage_fixture.id, volume=330)
+    intake = validators.IntakeCreate(consumable_id=beverage_fixture.id, volume=500)
     result = services.add_intake(session=session, intake=intake)
-    assert result.id == beverage_fixture.id
-    assert result.volume == 330
+    assert result == expected
