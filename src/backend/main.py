@@ -6,6 +6,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
+from adapters.orm import start_mappers
 from domain import validators
 from services import handlers
 
@@ -15,6 +16,7 @@ engine = create_engine(
     SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
 )
 SessionLocal = sessionmaker(autoflush=True, bind=engine)
+start_mappers()
 
 Base = declarative_base()
 
