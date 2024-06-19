@@ -1,6 +1,9 @@
 import {Suspense, use, useState, useEffect} from "react";
 import {ExerciseForm, BeverageForm, FoodForm} from "./Forms";
+import { ErrorBoundary } from "react-error-boundary";
 import "./App.css";
+
+const upstreamRoot = import.meta.env.VITE_UPSTREAM_ROOT
 
 const Home = ({clickHandler}) => {
   return (
@@ -35,7 +38,7 @@ const formRenderer = (item, toggleModal) => {
 };
 
 const getItems = async (category) => {
-  const b = await fetch("http://127.0.0.1:8000/" + category, {mode: "cors"})
+  const b = await fetch(upstreamRoot + category, {mode: "cors"})
   return b.json()
 }
 
@@ -53,8 +56,9 @@ const Item = (item, modalStatus, toggleModal) => {
 };
 
 const Search = ({items}) => {
-  const [results, setResults] = useState(items);
+  const [results, setResults] = useState([]);
   const [modalStatus, setModalStatus] = useState(null);
+  // TODO: reduce variables and migrate to reducer
   const data = use(items);
 
   const search = (e) =>
@@ -71,7 +75,7 @@ const Search = ({items}) => {
       </form>
       <div className="search-results">
         <ul>
-          {data.map((result) => Item(result, modalStatus, setModalStatus))}
+          {results.map((result) => Item(result, modalStatus, setModalStatus))}
         </ul>
       </div>
     </>
@@ -81,12 +85,12 @@ const Search = ({items}) => {
 
 const App = () => {
   const [category, setCategory] = useState(null);
-  const exercise = getItems('exercise')
-  const consumable = getItems('consumable')
-  const data = {'exercise': exercise, 'consumable': consumable}
+  const data = {'exercise': getItems('exercise'), 'consumable': getItems('consumable')}
 
   return (
-    <Suspense>
+
+  <ErrorBoundary fallback={<p>Can't connect to upstream server</p>}>
+    <Suspense fallback={<p>Downloading...</p>}>
       <div className="container">
         <main className="main">
           {category == null ? (
@@ -97,6 +101,7 @@ const App = () => {
         </main>
       </div>
     </Suspense>
+    </ErrorBoundary>
   );
 };
 

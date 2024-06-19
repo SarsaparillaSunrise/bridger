@@ -95,6 +95,8 @@ const BeverageForm = ({ item, toggleModal }) => {
     });
     toggleModal();
   };
+  // TODO: Disable button before valid?
+  // P153 for better form construction? Might be the same
   return (
     <>
       <h1 className="form-title">{item.name}</h1>
@@ -126,7 +128,7 @@ const BeverageForm = ({ item, toggleModal }) => {
   );
 };
 
-const baseUri = "http://127.0.0.1:8000/";
+const upstreamRoot = import.meta.env.VITE_UPSTREAM_ROOT
 const postOptions = {
   method: "POST",
   mode: "cors",
@@ -138,7 +140,7 @@ const postOptions = {
 
 const postFormData = async (category, formData) => {
   postOptions["body"] = JSON.stringify(formData);
-  return fetch(baseUri + category, postOptions)
+  return fetch(upstreamRoot + category, postOptions)
     .then((response) => response.json())
     .then((data) => console.log(data.data))
     .catch((error) => console.error(error));

@@ -1,21 +1,26 @@
-version: "3"
-
 services:
   backend:
     build:
       context: "./src/backend"
       dockerfile: "../../infrastructure/Dockerfile"
-    ports:
-      - "8000:8000/tcp"
+    expose:
+      - "8000/tcp"
     volumes:
       - "./src/backend:/app"
+      - "./infrastructure/bootstrap.sh:/app/bootstrap.sh"
     env_file:
       - "backend.env"
+    entrypoint: "./bootstrap.sh"
     command: ["fastapi", "run", "main.py", "--host", "0.0.0.0", "--port", "8000"]
 
-  nginx:
+  frontend:
     image: "nginx"
     ports:
       - "7500:80/tcp"
     volumes:
       - "./dist:/usr/share/nginx/html"
+      - "./infrastructure/nginx.conf:/etc/nginx/nginx.conf"
+      - "./infrastructure/default.conf.template:/etc/nginx/conf.d/default.conf.template"
+    command: /bin/bash -c "envsubst < /etc/nginx/conf.d/default.conf.template > /etc/nginx/conf.d/default.conf && nginx -g 'daemon off;'"
+    env_file:
+      - "frontend.env"
