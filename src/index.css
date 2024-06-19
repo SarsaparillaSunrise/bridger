@@ -5,9 +5,9 @@
 }
 
 :root {
-  --primary-colour: #0072b0;
-  --secondary-colour: #f2f2f2;
-  --tertiary-colour: #414141;
+  --primary-colour: #150663;
+  --secondary-colour: #123033;
+  --tertiary-colour: #d7d7d2;
   --column-width: 1080px; /* constrain for larger viewports */
 }
 
@@ -24,7 +24,7 @@ body {
 
 button {
   background-color: var(--primary-colour);
-  color: var(--secondary-colour);
+  color: var(--tertiary-colour);
   border: none;
   padding: 15px 32px;
   border-radius: 2em;
