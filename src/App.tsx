@@ -34,23 +34,26 @@ const postFormData = async (endpoint, formData) => {
 
 export const Home = () => {
   return (
-    <div id="category-list">
+    <div
+      id="category-list"
+      className="gap-x-3 text-center text-5xl text-gray-200"
+    >
       <p>
         <Link
           to="search"
           relative="path"
           state="consumable"
-          className="category-link"
+          className="p-5 bg-transparent text-grey-200 font-semibold hover:text-white"
         >
           Consumable
         </Link>
       </p>
-      <p>
+      <p className="p-3">
         <Link
           to="search"
           relative="path"
           state="exercise"
-          className="category-link"
+          className="p-5 bg-transparent text-grey-200 font-semibold hover:text-white"
         >
           Exercise
         </Link>
@@ -158,12 +161,12 @@ const ExerciseForm = ({ exercise }) => {
   const navigate = useNavigate();
   const postExerciseForm = async (formData) => {
     "use server";
-    // await postFormData("workout", {
-    //   exercise_id: formData.get("exercise_id"),
-    //   volume: formData.get("volume"),
-    //   reps: formData.get("reps"),
-    //   notes: formData.get("notes"),
-    // });
+    await postFormData("workout", {
+      exercise_id: formData.get("exercise_id"),
+      volume: formData.get("volume"),
+      reps: formData.get("reps"),
+      notes: formData.get("notes"),
+    });
     navigate("/");
   };
 
