@@ -14,6 +14,7 @@
 body {
   margin: unset;
   background-colour: var(--secondary-colour);
+  background-colour: red;
   font-family:
     -apple-system,
     -apple-system,

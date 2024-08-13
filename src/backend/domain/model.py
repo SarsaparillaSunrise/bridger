@@ -22,7 +22,7 @@ class Consumable:
     Attributes:
         name: Name
         category: FOOD or DRINK
-        calories: the amount of kilocalories in the Consumable
+        calories: the amount of kilocalories per 100 g/ml in the Consumable
         protein: the amount of protein, expressed in milligrams, in the Consumable
         carbohydrate: the amount of carbohydrate, expressed in milligrams, in the Consumable
         fat: the amount of fat, expressed in milligrams, in the Consumable

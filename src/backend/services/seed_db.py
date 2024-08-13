@@ -2,7 +2,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from adapters.orm import metadata, start_mappers
-from domain.model import CategoryExercise, Consumable, Exercise
+from domain.model import CategoryConsumable, CategoryExercise, Consumable, Exercise
 
 SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
 
@@ -69,6 +69,27 @@ session.add_all(
     Exercise(name=e, category=CategoryExercise.ACCESSORY) for e in ACCESSORY_EXERCISES
 )
 
+session.add(
+    Consumable(
+        name="Asahi Super Dry",
+        category=CategoryConsumable.BEVERAGE,
+        calories=41,
+        protein=300,
+        carbohydrate=2800,
+        fat=0,
+    )
+)
+
+session.add(
+    Consumable(
+        name="Ribeye Steak",
+        category=CategoryConsumable.FOOD,
+        calories=280,
+        protein=22_000,
+        carbohydrate=0,
+        fat=20_000,
+    )
+)
 session.commit()
 
 print("Exercises added")

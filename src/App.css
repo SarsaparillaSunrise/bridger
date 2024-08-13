@@ -1,3 +1,10 @@
+:root {
+  --primary-colour: red;
+  --secondary-colour: blue;
+  --tertiary-colour: rgb(163, 163, 163);
+  --butt: rgb(229, 229, 229);
+}
+
 .page-header {
   background-color: var(--primary-colour);
   color: var(--tertiary-colour);

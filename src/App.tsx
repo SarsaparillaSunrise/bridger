@@ -1,108 +1,236 @@
-import {Suspense, use, useState, useEffect} from "react";
-import {ExerciseForm, BeverageForm, FoodForm} from "./Forms";
+import { Suspense, use } from "react";
+import { preconnect, useFormStatus } from "react-dom";
 import { ErrorBoundary } from "react-error-boundary";
-import "./App.css";
+import {
+  Link,
+  RouterProvider,
+  createBrowserRouter,
+  useLocation,
+  useNavigate,
+} from "react-router-dom";
 
-const upstreamRoot = import.meta.env.VITE_UPSTREAM_ROOT
+import "./index.css";
 
-const Home = ({clickHandler}) => {
+const upstreamRoot = "http://127.0.0.1:8000/";
+
+const postOptions = {
+  method: "POST",
+  mode: "cors",
+  headers: {
+    "Content-Type": "application/json",
+  },
+  body: null,
+};
+
+const upstreamFetch = async (endpoint: string, postOptions = {}) => {
+  const res = await fetch(`${upstreamRoot}${endpoint}`, postOptions);
+  return res.json();
+};
+
+const postFormData = async (endpoint, formData) => {
+  postOptions["body"] = JSON.stringify(formData);
+  return upstreamFetch(endpoint, postOptions);
+};
+
+export const Home = () => {
   return (
-    <div className="categories">
-      <button
-        className="category-selection"
-        onClick={() => clickHandler("exercise")}
-      >
-        Exercise
-      </button>
-      <button
-        className="category-selection"
-        onClick={() => clickHandler("consumable")}
-      >
-        Consumable
-      </button>
+    <div id="category-list">
+      <p>
+        <Link
+          to="search"
+          relative="path"
+          state="consumable"
+          className="category-link"
+        >
+          Consumable
+        </Link>
+      </p>
+      <p>
+        <Link
+          to="search"
+          relative="path"
+          state="exercise"
+          className="category-link"
+        >
+          Exercise
+        </Link>
+      </p>
     </div>
   );
 };
 
-
-
-
-const formRenderer = (item, toggleModal) => {
-  if (item.category == "Food") {
-    return <FoodForm item={item} toggleModal={toggleModal} />;
-  } else if (item.category == "Beverage") {
-    return <BeverageForm item={item} toggleModal={toggleModal} />;
-  } else {
-    return <ExerciseForm item={item} toggleModal={toggleModal} />;
-  }
-};
-
-const getItems = async (category) => {
-  const b = await fetch(upstreamRoot + category, {mode: "cors"})
-  return b.json()
-}
-
-const Item = (item, modalStatus, toggleModal) => {
+export const Search = () => {
   return (
-    <div key={item.name}>
-      <button className="item-button" onClick={() => toggleModal(item.name)}>
-        {item.name}
-      </button>
-      {modalStatus == item.name ? (
-        <div className="overlay">{formRenderer(item, toggleModal)}</div>
-      ) : null}
-    </div>
-  );
-};
-
-const Search = ({items}) => {
-  const [results, setResults] = useState([]);
-  const [modalStatus, setModalStatus] = useState(null);
-  // TODO: reduce variables and migrate to reducer
-  const data = use(items);
-
-  const search = (e) =>
-    setResults(
-      data.filter((match) =>
-        match.name.toLowerCase().startsWith(e.target.value.toLowerCase()),
-      ),
-    );
-
-  return (
-    <>
-      <form className="search-form">
-        <input id="search-input" name="q" autoFocus onChange={search} />
-      </form>
-      <div className="search-results">
-        <ul>
-          {results.map((result) => Item(result, modalStatus, setModalStatus))}
-        </ul>
-      </div>
-    </>
-  );
-};
-
-
-const App = () => {
-  const [category, setCategory] = useState(null);
-  const data = {'exercise': getItems('exercise'), 'consumable': getItems('consumable')}
-
-  return (
-
-  <ErrorBoundary fallback={<p>Can't connect to upstream server</p>}>
-    <Suspense fallback={<p>Downloading...</p>}>
-      <div className="container">
-        <main className="main">
-          {category == null ? (
-            <Home clickHandler={setCategory} />
-          ) : (
-            <Search items={data[category]} />
-          )}
-        </main>
-      </div>
-    </Suspense>
+    <ErrorBoundary fallback={<p>Can't connect to upstream server</p>}>
+      <Suspense fallback={<p>⌛Downloading...</p>}>
+        <Items category={upstreamFetch(useLocation().state)} />
+      </Suspense>
     </ErrorBoundary>
   );
 };
 
-export default App;
+const Items = ({ category: category }) => {
+  const items = use(category);
+  return (
+    <div className="search-results">
+      <ul>
+        {items.length
+          ? items.map((item) => (
+              <li key={item.id}>
+                <Link to="/item" state={item}>
+                  {item.name}
+                </Link>{" "}
+              </li>
+            ))
+          : "No items"}
+      </ul>
+    </div>
+  );
+};
+
+export const Form = () => {
+  const item = useLocation().state;
+  return (
+    <>
+      <ErrorBoundary
+        fallback={<p>There was an error while submitting the form</p>}
+      >
+        <Suspense fallback="Submitting...">
+          <h1 className="form-title">{item.name}</h1>
+          {["FOOD", "BEVERAGE"].includes(item.category) ? (
+            <ConsumableForm consumable={item} />
+          ) : (
+            <ExerciseForm exercise={item} />
+          )}
+        </Suspense>
+      </ErrorBoundary>
+    </>
+  );
+};
+
+const Submit = () => {
+  const { pending } = useFormStatus();
+  return (
+    <button type="submit" disabled={pending}>
+      {pending ? "Submitting..." : "Submit"}
+    </button>
+  );
+};
+
+const ConsumableForm = ({ consumable }) => {
+  const navigate = useNavigate();
+  const postConsumableForm = async (formData) => {
+    "use server";
+    await postFormData("intake", {
+      consumable_id: formData.get("consumable_id"),
+      volume: formData.get("volume"),
+    });
+    navigate("/");
+  };
+
+  return (
+    <form className="entry-form" action={postConsumableForm}>
+      <input
+        name="consumable_id"
+        type="hidden"
+        defaultValue={consumable.id}
+        readOnly
+      />
+      <p>
+        <label htmlFor="volume">
+          Volume ({consumable.category == "BEVERAGE" ? "ml" : "g"}):
+        </label>
+      </p>
+      <input
+        name="volume"
+        type="number"
+        min="1"
+        inputMode="numeric"
+        required
+        autoFocus
+      />
+      <Submit />
+    </form>
+  );
+};
+
+const ExerciseForm = ({ exercise }) => {
+  const navigate = useNavigate();
+  const postExerciseForm = async (formData) => {
+    "use server";
+    // await postFormData("workout", {
+    //   exercise_id: formData.get("exercise_id"),
+    //   volume: formData.get("volume"),
+    //   reps: formData.get("reps"),
+    //   notes: formData.get("notes"),
+    // });
+    navigate("/");
+  };
+
+  return (
+    <div>
+      <ErrorBoundary
+        fallback={<p>There was an error while submitting the form</p>}
+      >
+        <form className="entry-form" action={postExerciseForm}>
+          <input
+            name="exercise_id"
+            type="hidden"
+            defaultValue={exercise.id}
+            readOnly
+          />
+          <p>
+            <label htmlFor="volume">Volume:</label>
+          </p>
+          <input
+            name="volume"
+            type="number"
+            min="1"
+            inputMode="numeric"
+            required
+            autoFocus
+          />
+          <p>
+            <label htmlFor="reps">Rep count:</label>
+          </p>
+          <input
+            name="reps"
+            type="number"
+            min="1"
+            inputMode="numeric"
+            required
+          />
+          <p>
+            <label htmlFor="notes">Notes:</label>
+          </p>
+          <input name="notes" type="textArea" />
+          <Submit />
+        </form>
+      </ErrorBoundary>
+    </div>
+  );
+};
+
+const router = createBrowserRouter([
+  {
+    path: "/",
+    element: <Home />,
+  },
+  {
+    path: "/search",
+    element: <Search />,
+  },
+  {
+    path: "/item",
+    element: <Form />,
+  },
+]);
+
+export default function App() {
+  preconnect(upstreamRoot);
+  return <RouterProvider router={router} fallbackElement={<p>Loading...</p>} />;
+}
+
+if (import.meta.hot) {
+  import.meta.hot.dispose(() => router.dispose());
+}
