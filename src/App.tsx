@@ -31,33 +31,26 @@ const postFormData = async (endpoint, formData) => {
   postOptions["body"] = JSON.stringify(formData);
   return upstreamFetch(endpoint, postOptions);
 };
-
 export const Home = () => {
   return (
     <div
       id="category-list"
       className="gap-x-3 text-center text-5xl text-gray-200"
     >
-      <p>
-        <Link
-          to="search"
-          relative="path"
-          state="consumable"
-          className="p-5 bg-transparent text-grey-200 font-semibold hover:text-white"
-        >
-          Consumable
-        </Link>
-      </p>
-      <p className="p-3">
-        <Link
-          to="search"
-          relative="path"
-          state="exercise"
-          className="p-5 bg-transparent text-grey-200 font-semibold hover:text-white"
-        >
-          Exercise
-        </Link>
-      </p>
+      <div className="p-5 bg-transparent text-grey-200 font-semibold hover:text-white">
+        <p>
+          <Link to="search" relative="path" state="consumable">
+            Consumable
+          </Link>
+        </p>
+      </div>
+      <div className="p-5 bg-transparent text-grey-200 font-semibold hover:text-white">
+        <p className="p-3">
+          <Link to="search" relative="path" state="exercise">
+            Exercise
+          </Link>
+        </p>
+      </div>
     </div>
   );
 };
