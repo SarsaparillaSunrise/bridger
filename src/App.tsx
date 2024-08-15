@@ -11,7 +11,7 @@ import {
 
 import "./index.css";
 
-const upstreamRoot = "http://127.0.0.1:8000/";
+const upstreamRoot = "http://192.168.1.69:8000/";
 
 const postOptions = {
   method: "POST",
@@ -57,7 +57,7 @@ export const Home = () => {
 
 export const Search = () => {
   return (
-    <ErrorBoundary fallback={<p>Can't connect to upstream server</p>}>
+    <ErrorBoundary fallback={<p>Cannot connect to upstream server</p>}>
       <Suspense fallback={<p>⌛Downloading...</p>}>
         <Items category={upstreamFetch(useLocation().state)} />
       </Suspense>
@@ -68,11 +68,11 @@ export const Search = () => {
 const Items = ({ category: category }) => {
   const items = use(category);
   return (
-    <div className="search-results">
-      <ul>
+    <div className="w-full flex justify-center">
+      <ul className="items-center justify-center text-5xl space-y-4">
         {items.length
           ? items.map((item) => (
-              <li key={item.id}>
+              <li key={item.id} className="w-full">
                 <Link to="/item" state={item}>
                   {item.name}
                 </Link>{" "}
@@ -92,7 +92,7 @@ export const Form = () => {
         fallback={<p>There was an error while submitting the form</p>}
       >
         <Suspense fallback="Submitting...">
-          <h1 className="form-title">{item.name}</h1>
+          <h1 className="text-center text-5xl space-y-4">{item.name}</h1>
           {["FOOD", "BEVERAGE"].includes(item.category) ? (
             <ConsumableForm consumable={item} />
           ) : (
@@ -107,7 +107,11 @@ export const Form = () => {
 const Submit = () => {
   const { pending } = useFormStatus();
   return (
-    <button type="submit" disabled={pending}>
+    <button
+      type="submit"
+      disabled={pending}
+      className="bg-blue-500 hover:bg-blue-700 mt-3 text-white font-bold py-2 px-4 rounded-full float-right"
+    >
       {pending ? "Submitting..." : "Submit"}
     </button>
   );
@@ -176,7 +180,12 @@ const ExerciseForm = ({ exercise }) => {
             readOnly
           />
           <p>
-            <label htmlFor="volume">Volume:</label>
+            <label
+              htmlFor="volume"
+              className="block text-white-700 font-bold my-2"
+            >
+              Volume:
+            </label>
           </p>
           <input
             name="volume"
@@ -185,9 +194,15 @@ const ExerciseForm = ({ exercise }) => {
             inputMode="numeric"
             required
             autoFocus
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
           <p>
-            <label htmlFor="reps">Rep count:</label>
+            <label
+              htmlFor="reps"
+              className="block text-white-700 font-bold my-2"
+            >
+              Rep Count:
+            </label>
           </p>
           <input
             name="reps"
@@ -195,11 +210,21 @@ const ExerciseForm = ({ exercise }) => {
             min="1"
             inputMode="numeric"
             required
+            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
           />
           <p>
-            <label htmlFor="notes">Notes:</label>
+            <label
+              htmlFor="notes"
+              className="block text-white-700 font-bold my-2"
+            >
+              Notes:
+            </label>
           </p>
-          <input name="notes" type="textArea" />
+          <input
+            name="notes"
+            type="textArea"
+            className="shadow appearance-none border rounded w-full py-2 px-3 h-20 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+          />
           <Submit />
         </form>
       </ErrorBoundary>

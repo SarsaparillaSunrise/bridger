@@ -1,4 +1,3 @@
-from os import environ
 from typing import List
 
 from fastapi import Depends, FastAPI, HTTPException
@@ -25,7 +24,8 @@ app = FastAPI(debug=True)
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
-        environ.get("ALLOWED_ORIGIN", ""),
+        "*",
+        # environ.get("ALLOWED_ORIGIN", ""),
     ],
     allow_credentials=True,
     allow_methods=["*"],
