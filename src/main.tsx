@@ -6,7 +6,7 @@ import "./index.css";
 ReactDOM.createRoot(document.getElementById("root")!).render(
   <React.StrictMode>
     <header>
-      <a href="/" className="flex text-[#1da1f2] text-4xl p-3 font-bold">
+      <a href="/" className="flex text-blue-500 text-4xl p-3 font-bold">
         <div id="logo" className="mr-4">
           <svg
             xmlns="http://www.w3.org/2000/svg"
@@ -23,68 +23,68 @@ ReactDOM.createRoot(document.getElementById("root")!).render(
                 <path
                   id="shape0"
                   transform="translate(38.639, 26.428)"
-                  fill="#3B82F6"
                   strokeOpacity="0"
                   stroke="#000000"
                   strokeWidth="0"
                   strokeLinecap="square"
                   strokeLinejoin="bevel"
                   d="M14.331 0C6.428 0 0 6.429 0 14.33C0 22.233 6.428 28.661 14.331 28.661C22.232 28.661 28.661 22.233 28.661 14.33C28.661 6.428 22.232 0 14.331 0Z"
+                  className="fill-blue-500"
                 />
                 <path
                   id="shape1"
                   transform="translate(3.166, 44.672)"
-                  fill="#3B82F6"
                   strokeOpacity="0"
                   stroke="#000000"
                   strokeWidth="0"
                   strokeLinecap="square"
                   strokeLinejoin="bevel"
                   d="M35.202 1.828C34.969 1.235 34.766 0.626 34.603 0L16.026 5.247C14.777 2.221 11.802 0.092 8.328 0.092C3.727 0.092 0 3.82 0 8.418C0 13.017 3.728 16.746 8.328 16.746C12.927 16.746 16.654 13.017 16.654 8.418C16.654 7.967 16.609 7.529 16.539 7.098Z"
+                  className="fill-blue-500"
                 />
                 <path
                   id="shape2"
                   transform="translate(20.3228523249942, 9.01188541137631)"
-                  fill="#3B82F6"
                   strokeOpacity="0"
                   stroke="#000000"
                   strokeWidth="0"
                   strokeLinecap="square"
                   strokeLinejoin="bevel"
                   d="M9.81315 11.8881C10.0431 11.7441 10.2581 11.5861 10.4631 11.4191L21.0931 21.1381C21.5281 20.6641 21.9931 20.2201 22.4821 19.8031L11.7611 10.0021C13.1181 7.97111 13.2581 5.25211 11.8871 3.04111C10.0171 0.0251145 6.05715 -0.904885 3.04115 0.965115C0.0231477 2.83511 -0.903852 6.79611 0.965148 9.81211C2.83415 12.8281 6.79615 13.7591 9.81315 11.8881Z"
+                  className="fill-blue-500"
                 />
                 <path
                   id="shape3"
                   transform="translate(63.391, 10.9054711171165)"
-                  fill="#3B82F6"
                   strokeOpacity="0"
                   stroke="#000000"
                   strokeWidth="0"
                   strokeLinecap="square"
                   strokeLinejoin="bevel"
                   d="M1.367 19.5105L12.835 10.9855C14.571 12.7055 17.212 13.3585 19.646 12.4325C22.961 11.1675 24.626 7.45553 23.363 4.14053C22.098 0.823529 18.386 -0.840471 15.069 0.422529C11.755 1.68553 10.089 5.39953 11.353 8.71453C11.45 8.96853 11.566 9.20953 11.69 9.44353L0 18.1335C0.481 18.5635 0.939 19.0235 1.367 19.5105Z"
+                  className="fill-blue-500"
                 />
                 <path
                   id="shape4"
                   transform="translate(35.391978207642, 55.837)"
-                  fill="#3B82F6"
                   strokeOpacity="0"
                   stroke="#000000"
                   strokeWidth="0"
                   strokeLinecap="square"
                   strokeLinejoin="bevel"
                   d="M12.305 18.735C11.909 18.52 11.501 18.35 11.09 18.205L15.113 0.42C14.476 0.318 13.85 0.176 13.238 0L9.21703 17.773C5.96303 17.425 2.67003 19.023 1.01103 22.076C-1.18297 26.117 0.312021 31.173 4.35203 33.369C8.39403 35.565 13.45 34.069 15.645 30.028C17.84 25.987 16.346 20.931 12.305 18.735Z"
+                  className="fill-blue-500"
                 />
                 <path
                   id="shape5"
                   transform="translate(66.264, 47.375)"
-                  fill="#3B82F6"
                   strokeOpacity="0"
                   stroke="#000000"
                   strokeWidth="0"
                   strokeLinecap="square"
                   strokeLinejoin="bevel"
                   d="M23.53 2.57C20.643 0.508 16.629 1.176 14.568 4.065C14.409 4.287 14.272 4.516 14.148 4.748L0.93 0C0.655 0.591 0.345 1.16 0 1.708L13.496 6.557C13.026 8.955 13.942 11.515 16.061 13.028C18.95 15.091 22.962 14.421 25.026 11.533C27.09 8.645 26.419 4.632 23.53 2.57Z"
+                  className="fill-blue-500"
                 />
               </g>
             </g>
