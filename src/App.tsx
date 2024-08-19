@@ -137,7 +137,7 @@ const ConsumableForm = ({ consumable }) => {
         readOnly
       />
       <p>
-        <label htmlFor="volume">
+        <label htmlFor="volume" className="block text-white-700 font-bold my-2">
           Volume ({consumable.category == "BEVERAGE" ? "ml" : "g"}):
         </label>
       </p>
@@ -148,6 +148,7 @@ const ConsumableForm = ({ consumable }) => {
         inputMode="numeric"
         required
         autoFocus
+        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
       />
       <Submit />
     </form>
