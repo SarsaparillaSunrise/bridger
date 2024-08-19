@@ -1,13 +1,28 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { beforeEach, describe, expect, test, vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
-import { Search } from "./App";
+import { Home, Search } from "./App";
 
 // console.log(screen.debug());
 
+describe("Home", () => {
+  test("contains Exercise and Consumable links", async () => {
+    render(
+      <MemoryRouter initialEntries={[{ pathname: "/" }]}>
+        <Home />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      expect(screen.getByText("Exercise").toBeInTheDocument);
+      expect(screen.getByText("Consumable").toBeInTheDocument);
+    });
+  });
+});
+
 describe("Search", () => {
-  test("backend response exercises are present in search results", async () => {
+  test("results contain backend exercises", async () => {
     global.fetch = vi.fn().mockResolvedValue({
       json: vi.fn().mockResolvedValue([
         { id: 1, name: "Test Excercise 1" },
@@ -32,7 +47,7 @@ describe("Search", () => {
     });
   });
 
-  test("backend response consumables are present in search results", async () => {
+  test("results contain backend consumables", async () => {
     global.fetch = vi.fn().mockResolvedValue({
       json: vi.fn().mockResolvedValue([
         { id: 1, name: "Test Consumable 1" },
@@ -52,8 +67,8 @@ describe("Search", () => {
         `${import.meta.env.VITE_UPSTREAM_ROOT}consumable`,
         {},
       );
-      expect(screen.getByText("Test Consumable 1"));
-      expect(screen.getByText("Test Consumable 2"));
+      expect(screen.getByText("Test Consumable 1").toBeInTheDocument);
+      expect(screen.getByText("Test Consumable 2").toBeInTheDocument);
     });
   });
 });
