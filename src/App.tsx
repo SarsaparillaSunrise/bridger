@@ -11,8 +11,7 @@ import {
 
 import "./index.css";
 
-const upstreamRoot = "http://192.168.1.69:8000/";
-
+const upstreamRoot = import.meta.env.VITE_UPSTREAM_ROOT;
 const postOptions = {
   method: "POST",
   mode: "cors",
