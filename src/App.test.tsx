@@ -1,11 +1,8 @@
-import matchers from "@testing-library/jest-dom/matchers";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { describe, expect, test, vi } from "vitest";
+import { vi } from "vitest";
 
 import { Form, Home, Search } from "./App";
-
-expect.extend(matchers);
 
 describe("Home", () => {
   test("contains Exercise and Consumable links", async () => {
@@ -16,7 +13,7 @@ describe("Home", () => {
     );
 
     await waitFor(() => {
-      // expect(screen.getByText("Exercise" as any).toBeInTheDocument);
+      // vite + pnpm + expect = https://github.com/testing-library/jest-dom/issues/567
       expect((screen.getByText("Exercise") as any).toBeInTheDocument);
       expect((screen.getByText("Consumable") as any).toBeInTheDocument);
     });
