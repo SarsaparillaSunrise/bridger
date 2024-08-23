@@ -135,20 +135,19 @@ const ConsumableForm = ({ consumable }) => {
         defaultValue={consumable.id}
         readOnly
       />
-      <p>
-        <label htmlFor="volume" className="block text-white-700 font-bold my-2">
-          Volume ({consumable.category == "BEVERAGE" ? "ml" : "g"}):
-        </label>
-      </p>
-      <input
-        name="volume"
-        type="number"
-        min="1"
-        inputMode="numeric"
-        required
-        autoFocus
-        className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-      />
+      <label className="block text-white-700 font-bold my-2">
+        Volume ({consumable.category == "BEVERAGE" ? "ml" : "g"}):
+        <input
+          data-testid="volume-input"
+          name="volume"
+          type="number"
+          min="1"
+          inputMode="numeric"
+          required
+          autoFocus
+          className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+        />
+      </label>
       <Submit />
     </form>
   );
@@ -181,13 +180,14 @@ const ExerciseForm = ({ exercise }) => {
           />
           <p>
             <label
-              htmlFor="volume"
+              htmlFor="volume-input"
               className="block text-white-700 font-bold my-2"
             >
               Volume:
             </label>
           </p>
           <input
+            id="volume-input"
             name="volume"
             type="number"
             min="1"
@@ -198,29 +198,31 @@ const ExerciseForm = ({ exercise }) => {
           />
           <p>
             <label
-              htmlFor="reps"
+              htmlFor="reps-input"
               className="block text-white-700 font-bold my-2"
             >
               Rep Count:
             </label>
+            <input
+              id="reps-input"
+              name="reps"
+              type="number"
+              min="1"
+              inputMode="numeric"
+              required
+              className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
+            />
           </p>
-          <input
-            name="reps"
-            type="number"
-            min="1"
-            inputMode="numeric"
-            required
-            className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-          />
           <p>
             <label
-              htmlFor="notes"
+              htmlFor="notes-input"
               className="block text-white-700 font-bold my-2"
             >
               Notes:
             </label>
           </p>
           <input
+            id="notes-input"
             name="notes"
             type="textArea"
             className="shadow appearance-none border rounded w-full py-2 px-3 h-20 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"

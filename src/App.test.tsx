@@ -2,9 +2,7 @@ import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, test, vi } from "vitest";
 
-import { Home, Search } from "./App";
-
-// console.log(screen.debug());
+import { Form, Home, Search } from "./App";
 
 describe("Home", () => {
   test("contains Exercise and Consumable links", async () => {
@@ -69,6 +67,74 @@ describe("Search", () => {
       );
       expect(screen.getByText("Test Consumable 1").toBeInTheDocument);
       expect(screen.getByText("Test Consumable 2").toBeInTheDocument);
+    });
+  });
+});
+
+describe("Form", () => {
+  test("Exercise contains correct labels and fields", async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: "/item",
+            state: { name: "Test Exercise", category: "EXERCISE" },
+          },
+        ]}
+      >
+        <Form />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      const volumeField = screen.getByLabelText("Volume:");
+      expect(volumeField).toHaveProperty("name", "volume");
+
+      const repsField = screen.getByLabelText("Rep Count:");
+      expect(repsField).toHaveProperty("name", "reps");
+
+      const notesField = screen.getByLabelText("Notes:");
+      expect(notesField).toHaveProperty("name", "notes");
+    });
+  });
+
+  test("Consumable Beverage contains correct labels and fields", async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: "/item",
+            state: { name: "Test Consumable", category: "BEVERAGE" },
+          },
+        ]}
+      >
+        <Form />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      const volumeField = screen.getByLabelText("Volume (ml):");
+      expect(volumeField).toHaveProperty("name", "volume");
+    });
+  });
+
+  test("Consumable Food contains correct labels and fields", async () => {
+    render(
+      <MemoryRouter
+        initialEntries={[
+          {
+            pathname: "/item",
+            state: { name: "Test Consumable", category: "FOOD" },
+          },
+        ]}
+      >
+        <Form />
+      </MemoryRouter>,
+    );
+
+    await waitFor(() => {
+      const volumeField = screen.getByLabelText("Volume (g):");
+      expect(volumeField).toHaveProperty("name", "volume");
     });
   });
 });
