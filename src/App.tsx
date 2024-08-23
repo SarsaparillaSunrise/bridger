@@ -11,8 +11,24 @@ import {
 
 import "./index.css";
 
+interface Item {
+  id: number;
+  name: string;
+}
+
+interface Consumable {
+  id: number;
+  name: string;
+  category: string;
+}
+
+interface Exercise {
+  id: number;
+  name: string;
+}
+
 const upstreamRoot = import.meta.env.VITE_UPSTREAM_ROOT;
-const postOptions = {
+const postOptions: RequestInit = {
   method: "POST",
   mode: "cors",
   headers: {
@@ -26,7 +42,10 @@ const upstreamFetch = async (endpoint: string, postOptions = {}) => {
   return res.json();
 };
 
-const postFormData = async (endpoint, formData) => {
+const postFormData = async (
+  endpoint: string,
+  formData: Record<string, unknown>,
+) => {
   postOptions["body"] = JSON.stringify(formData);
   return upstreamFetch(endpoint, postOptions);
 };
@@ -64,7 +83,7 @@ export const Search = () => {
   );
 };
 
-const Items = ({ category: category }) => {
+const Items = ({ category }: { category: Promise<Item[]> }) => {
   const items = use(category);
   return (
     <div className="w-full flex justify-center">
@@ -116,9 +135,9 @@ const Submit = () => {
   );
 };
 
-const ConsumableForm = ({ consumable }) => {
+const ConsumableForm = ({ consumable }: { consumable: Consumable }) => {
   const navigate = useNavigate();
-  const postConsumableForm = async (formData) => {
+  const postConsumableForm = async (formData: any) => {
     "use server";
     await postFormData("intake", {
       consumable_id: formData.get("consumable_id"),
@@ -153,9 +172,9 @@ const ConsumableForm = ({ consumable }) => {
   );
 };
 
-const ExerciseForm = ({ exercise }) => {
+const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
   const navigate = useNavigate();
-  const postExerciseForm = async (formData) => {
+  const postExerciseForm = async (formData: any) => {
     "use server";
     await postFormData("workout", {
       exercise_id: formData.get("exercise_id"),

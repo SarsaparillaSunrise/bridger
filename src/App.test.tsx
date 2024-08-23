@@ -1,8 +1,11 @@
+import matchers from "@testing-library/jest-dom/matchers";
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
 import { describe, expect, test, vi } from "vitest";
 
 import { Form, Home, Search } from "./App";
+
+expect.extend(matchers);
 
 describe("Home", () => {
   test("contains Exercise and Consumable links", async () => {
@@ -13,8 +16,9 @@ describe("Home", () => {
     );
 
     await waitFor(() => {
-      expect(screen.getByText("Exercise").toBeInTheDocument);
-      expect(screen.getByText("Consumable").toBeInTheDocument);
+      // expect(screen.getByText("Exercise" as any).toBeInTheDocument);
+      expect((screen.getByText("Exercise") as any).toBeInTheDocument);
+      expect((screen.getByText("Consumable") as any).toBeInTheDocument);
     });
   });
 });
@@ -65,8 +69,8 @@ describe("Search", () => {
         `${import.meta.env.VITE_UPSTREAM_ROOT}consumable`,
         {},
       );
-      expect(screen.getByText("Test Consumable 1").toBeInTheDocument);
-      expect(screen.getByText("Test Consumable 2").toBeInTheDocument);
+      expect((screen.getByText("Test Consumable 1") as any).toBeInTheDocument);
+      expect((screen.getByText("Test Consumable 2") as any).toBeInTheDocument);
     });
   });
 });
