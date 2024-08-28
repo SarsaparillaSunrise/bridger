@@ -1,4 +1,4 @@
-import { Suspense, use } from "react";
+import { Suspense, use, useState } from "react";
 import { preconnect, useFormStatus } from "react-dom";
 import { ErrorBoundary } from "react-error-boundary";
 import {
@@ -85,20 +85,44 @@ export const Search = () => {
 
 const Items = ({ category }: { category: Promise<Item[]> }) => {
   const items = use(category);
+  const [searchTerm, setSearchTerm] = useState("");
+  const data = use(category);
+
+  const filteredResults = data.filter((match) =>
+    match.name.toLowerCase().startsWith(searchTerm.toLowerCase()),
+  );
+
+  const handleSearch = (e) => {
+    setSearchTerm(e.target.value);
+  };
+
   return (
-    <div className="w-full flex justify-center">
-      <ul className="items-center justify-center text-5xl space-y-4">
-        {items.length
-          ? items.map((item) => (
-              <li key={item.id} className="w-full">
+    <>
+      <div className="w-full">
+        <input
+          autoFocus
+          value={searchTerm}
+          onChange={handleSearch}
+          className="block w-full text-3xl text-gray-800 px-4 py-2 rounded-full focus:outline-none my-5 focus:ring-2 focus:ring-blue-500"
+          placeholder="Search..."
+        />
+      </div>
+      <div className="w-full">
+        <ul className="text-5xl space-y-4">
+          {items.length ? (
+            filteredResults.map((item) => (
+              <li key={item.id}>
                 <Link to="/item" state={item}>
                   {item.name}
                 </Link>{" "}
               </li>
             ))
-          : "No items"}
-      </ul>
-    </div>
+          ) : (
+            <li>No items</li>
+          )}
+        </ul>
+      </div>
+    </>
   );
 };
 
