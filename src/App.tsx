@@ -185,7 +185,7 @@ const ConsumableForm = ({ consumable }: { consumable: Consumable }) => {
           name="volume"
           type="number"
           min="1"
-          inputMode="numeric"
+          inputMode="decimal"
           required
           autoFocus
           className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -234,7 +234,7 @@ const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
             name="volume"
             type="number"
             min="1"
-            inputMode="numeric"
+            inputMode="decimal"
             required
             autoFocus
             className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
@@ -251,7 +251,7 @@ const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
               name="reps"
               type="number"
               min="1"
-              inputMode="numeric"
+              inputMode="decimal"
               required
               className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
             />
