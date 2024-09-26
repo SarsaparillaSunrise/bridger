@@ -92,7 +92,7 @@ const Items = ({ category }: { category: Promise<Item[]> }) => {
     match.name.toLowerCase().startsWith(searchTerm.toLowerCase()),
   );
 
-  const handleSearch = (e) => {
+  const handleSearch = (e: React.ChangeEvent<HTMLInputElement>) => {
     setSearchTerm(e.target.value);
   };
 
