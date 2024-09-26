@@ -167,7 +167,7 @@ const ConsumableForm = ({ consumable }: { consumable: Consumable }) => {
       consumable_id: formData.get("consumable_id"),
       volume: formData.get("volume"),
     });
-    navigate("/");
+    navigate(-1);
   };
 
   return (
@@ -206,7 +206,7 @@ const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
       reps: formData.get("reps"),
       notes: formData.get("notes"),
     });
-    navigate("/");
+    navigate(-1);
   };
 
   return (
