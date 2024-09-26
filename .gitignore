@@ -31,3 +31,6 @@ src/backend/.env/
 
 # Database:
 src/backend/db.sqlite3
+
+# Exclude project notes:
+todo.org
