@@ -226,7 +226,7 @@ const ExerciseForm = ({ exercise }: { exercise: Exercise }) => {
               htmlFor="volume-input"
               className="block text-white-700 font-bold my-2"
             >
-              Volume:
+              Volume (kg):
             </label>
           </p>
           <input
