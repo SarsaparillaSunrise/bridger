@@ -24,6 +24,7 @@ orjson==3.10.3
 packaging==24.0
 parso==0.8.4
 pluggy==1.5.0
+psycopg2==2.9.9
 pudb==2024.1
 pydantic==2.7.1
 pydantic_core==2.18.2
