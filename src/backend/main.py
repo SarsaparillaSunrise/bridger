@@ -9,14 +9,6 @@ from adapters.orm import start_mappers
 from domain import validators
 from services import handlers
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-)
-SessionLocal = sessionmaker(autoflush=True, bind=engine)
-start_mappers()
-
 Base = declarative_base()
 
 app = FastAPI(debug=True)
@@ -36,6 +28,13 @@ app.add_middleware(
 
 
 def get_db():
+    SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
+
+    engine = create_engine(
+        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
+    )
+    SessionLocal = sessionmaker(autoflush=True, bind=engine)
+    start_mappers()
     db = SessionLocal()
     try:
         yield db

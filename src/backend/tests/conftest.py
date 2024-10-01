@@ -1,68 +1,34 @@
 import pytest
-import sqlalchemy as sa
 from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from adapters.orm import metadata, start_mappers
+from config import TEST_DATABASE_URL
 from domain import model
 from main import app, get_db
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///:memory:"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}, echo=True
-)
-TestingSessionLocal = sessionmaker(autocommit=False, autoflush=False, bind=engine)
-
-# Create DB:
-metadata.drop_all(bind=engine)
-metadata.create_all(bind=engine)
-
-# Create tables:
 start_mappers()
 
 
-# Fix pysqlite transaction handling as per:
-# https://docs.sqlalchemy.org/en/14/dialects/sqlite.html#serializable-isolation-savepoints-transactional-ddl
-@sa.event.listens_for(engine, "connect")
-def do_connect(dbapi_connection, connection_record):
-    # disable pysqlite's emitting of the BEGIN statement entirely.
-    # also stops it from emitting COMMIT before any DDL.
-    dbapi_connection.isolation_level = None
+@pytest.fixture(scope="function")
+def db_session():
+    engine = create_engine(TEST_DATABASE_URL)
 
+    metadata.drop_all(bind=engine)
+    metadata.create_all(bind=engine)
 
-@sa.event.listens_for(engine, "begin")
-def do_begin(conn):
-    # emit our own BEGIN
-    conn.exec_driver_sql("BEGIN")
-
-
-# Nested transactions in SQLite based on:
-# https://docs.sqlalchemy.org/en/14/orm/session_transaction.html#joining-a-session-into-an-external-transaction-such-as-for-test-suites
-@pytest.fixture()
-def session():
+    Session = sessionmaker(bind=engine, autocommit=False, autoflush=True)
     connection = engine.connect()
     transaction = connection.begin()
-    session = TestingSessionLocal(bind=connection)
+    session = Session()
 
-    # Begin a nested transaction (using SAVEPOINT).
-    nested = connection.begin_nested()
-
-    # If the application code calls session.commit, it will end the nested
-    # transaction. Need to start a new one when that happens.
-    @sa.event.listens_for(session, "after_transaction_end")
-    def end_savepoint(session, transaction):
-        nonlocal nested
-        if not nested.is_active:
-            nested = connection.begin_nested()
-
-    yield session
-
-    # Rollback the overall transaction, restoring the state before the test ran.
-    session.close()
-    transaction.rollback()
-    connection.close()
+    try:
+        yield session
+    finally:
+        session.close()
+        transaction.rollback()
+        connection.close()
 
 
 @pytest.fixture()
@@ -97,15 +63,14 @@ def exercise_fixture():
 
 
 @pytest.fixture()
-def populated_session(session, food_fixture, exercise_fixture):
-    session.add(food_fixture)
-    session.add(exercise_fixture)
-    session.commit()
+def populated_session(db_session, food_fixture, exercise_fixture):
+    db_session.add(food_fixture)
+    db_session.add(exercise_fixture)
+    db_session.commit()
 
-    yield session
+    yield db_session
 
 
-# Use session fixture, instead of creating a new session
 @pytest.fixture()
 def test_client(populated_session):
     def override_get_db():
