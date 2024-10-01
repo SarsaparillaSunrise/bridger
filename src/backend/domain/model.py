@@ -3,8 +3,8 @@ from enum import Enum
 
 
 class CategoryConsumable(Enum):
-    FOOD = "FOOD"
-    BEVERAGE = "BEVERAGE"
+    FOOD = "Food"
+    BEVERAGE = "Beverage"
 
 
 class CategoryExercise(Enum):
