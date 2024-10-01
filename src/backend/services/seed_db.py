@@ -2,13 +2,10 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
 from adapters.orm import metadata, start_mappers
+from config import DATABASE_URL
 from domain.model import CategoryConsumable, CategoryExercise, Consumable, Exercise
 
-SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
-
-engine = create_engine(
-    SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}, echo=True
-)
+engine = create_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autoflush=True, bind=engine)
 
 metadata.drop_all(bind=engine)
