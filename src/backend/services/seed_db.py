@@ -59,6 +59,7 @@ ACCESSORY_EXERCISES = (
     "Leg Extension",
     "Leg Curl",
     "Standing Calf Raise",
+    "Seated Back Row",
 )
 
 
