@@ -105,7 +105,7 @@ describe("Form", () => {
         initialEntries={[
           {
             pathname: "/item",
-            state: { name: "Test Consumable", category: "BEVERAGE" },
+            state: { name: "Test Consumable", category: "Beverage" },
           },
         ]}
       >
@@ -125,7 +125,7 @@ describe("Form", () => {
         initialEntries={[
           {
             pathname: "/item",
-            state: { name: "Test Consumable", category: "FOOD" },
+            state: { name: "Test Consumable", category: "Food" },
           },
         ]}
       >

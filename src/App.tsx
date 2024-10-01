@@ -135,7 +135,7 @@ export const Form = () => {
       >
         <Suspense fallback="Submitting...">
           <h1 className="text-center text-5xl space-y-4">{item.name}</h1>
-          {["FOOD", "BEVERAGE"].includes(item.category) ? (
+          {["Food", "Beverage"].includes(item.category) ? (
             <ConsumableForm consumable={item} />
           ) : (
             <ExerciseForm exercise={item} />
@@ -179,7 +179,7 @@ const ConsumableForm = ({ consumable }: { consumable: Consumable }) => {
         readOnly
       />
       <label className="block text-white-700 font-bold my-2">
-        Volume ({consumable.category == "BEVERAGE" ? "ml" : "g"}):
+        Volume ({consumable.category == "Beverage" ? "ml" : "g"}):
         <input
           data-testid="volume-input"
           name="volume"
