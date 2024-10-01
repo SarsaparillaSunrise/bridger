@@ -1,4 +1,15 @@
-from sqlalchemy import Column, Enum, ForeignKey, Integer, MetaData, String, Table
+from datetime import UTC, datetime
+
+from sqlalchemy import (
+    Column,
+    DateTime,
+    Enum,
+    ForeignKey,
+    Integer,
+    MetaData,
+    String,
+    Table,
+)
 from sqlalchemy.orm import registry
 
 from domain import model
@@ -44,6 +55,7 @@ workouts = Table(
     Column("volume", Integer, nullable=False),
     Column("reps", Integer, nullable=False),
     Column("notes", String, nullable=True),
+    Column("inserted_at", DateTime, nullable=False, default=datetime.now(tz=UTC)),
 )
 
 
