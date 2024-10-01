@@ -6,6 +6,7 @@ from sqlalchemy import create_engine
 from sqlalchemy.orm import Session, declarative_base, sessionmaker
 
 from adapters.orm import start_mappers
+from config import DATABASE_URL
 from domain import validators
 from services import handlers
 
@@ -28,11 +29,7 @@ app.add_middleware(
 
 
 def get_db():
-    SQLALCHEMY_DATABASE_URL = "sqlite:///./db.sqlite3"
-
-    engine = create_engine(
-        SQLALCHEMY_DATABASE_URL, connect_args={"check_same_thread": False}
-    )
+    engine = create_engine(DATABASE_URL)
     SessionLocal = sessionmaker(autoflush=True, bind=engine)
     start_mappers()
     db = SessionLocal()
