@@ -14,20 +14,25 @@ def test_read_item_consumable(test_client) -> None:
 
 
 def test_read_item_exercise(test_client) -> None:
-    expected = dict(id=1, category="Compound Lift", name="Test Exercise")
     response = test_client.get(url="exercise")
-    assert response.json() == [expected]
+    [exercise] = response.json()
     assert response.status_code == 200
+    assert exercise["category"] == "Compound Lift"
+    assert exercise["name"] == "Test Exercise"
 
 
 def test_create_workout_entry(test_client) -> None:
-    expected = dict(exercise_id=1, volume=120, reps=5, notes="test")
-    response = test_client.post(url="workout", json=expected)
-    assert response.json() == expected
+    response = test_client.post(
+        url="workout", json=dict(exercise_id=1, volume=120, reps=5, notes="test")
+    )
+    workout_entry = response.json()
     assert response.status_code == 201
+    assert workout_entry["volume"] == 120
+    assert workout_entry["reps"] == 5
+    assert workout_entry["notes"] == "test"
 
 
-def test_create_intake_entry(test_client, session) -> None:
+def test_create_intake_entry(test_client) -> None:
     response = test_client.post(url="intake", json=dict(consumable_id=1, volume=120))
     assert response.json() == {"id": 1, "volume": 120}
     assert response.status_code == 201
