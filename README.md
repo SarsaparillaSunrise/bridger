@@ -1,30 +1,42 @@
-# React + TypeScript + Vite
+# Bridger: Exercise and Calorie Tracker
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+[Bridger](https://en.wikipedia.org/wiki/Jim_Bridger) is a modern, efficient exercise and calorie tracking application.
 
-Currently, two official plugins are available:
+## Features
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- Track exercises and workouts
+- Log food and beverage intake
+- Calculate calorie consumption
+- User-friendly interface for easy data entry
 
-## Expanding the ESLint configuration
+## Screenshot
 
-If you are developing a production application, we recommend updating the configuration to enable type aware lint rules:
+<p align="center">
+  <a href="./images/screenshot-search.png" style="display: inline-block; margin-right: 20px;">
+    <img src="./images/screenshot-search.png" alt="Bridger app screenshot: Exercise search page" width="250" style="margin-bottom: 10px;">
+  </a>
+  <a href="./images/screenshot-form.png" style="display: inline-block;">
+    <img src="./images/screenshot-form.png" alt="Bridger app screenshot: Exercise form page" width="250" style="margin-bottom: 10px;">
+  </a>
+</p>
 
-- Configure the top-level `parserOptions` property like this:
+## Technology Stack
 
-```js
-export default {
-  // other rules...
-  parserOptions: {
-    ecmaVersion: "latest",
-    sourceType: "module",
-    project: ["./tsconfig.json", "./tsconfig.node.json"],
-    tsconfigRootDir: __dirname,
-  },
-};
-```
+### Frontend
 
-- Replace `plugin:@typescript-eslint/recommended` to `plugin:@typescript-eslint/recommended-type-checked` or `plugin:@typescript-eslint/strict-type-checked`
-- Optionally add `plugin:@typescript-eslint/stylistic-type-checked`
-- Install [eslint-plugin-react](https://github.com/jsx-eslint/eslint-plugin-react) and add `plugin:react/recommended` & `plugin:react/jsx-runtime` to the `extends` list
+- React 19
+- TypeScript
+- Tailwind CSS for styling
+- Vite for fast development and building
+
+### Backend
+
+- FastAPI
+- Python 3.12
+- SQLAlchemy for ORM
+- Alembic for database migrations
+
+## Getting Started
+
+    git clone git@github.com:SarsaparillaSunrise/bridger.git
+    docker-compose up
