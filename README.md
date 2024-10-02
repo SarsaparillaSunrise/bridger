@@ -38,7 +38,32 @@
 
 ## Getting Started
 
-    git clone git@github.com:SarsaparillaSunrise/bridger.git
-    docker-compose up
+Clone the repo:
+
+```bash
+git clone https://github.com/SarsaparillaSunrise/bridger
+cd bridger
+```
+
+Create env files:
+
+```bash
+echo "VITE_UPSTREAM_ROOT=http://127.0.0.1:8000/" > frontend.env
+echo "POSTGRES_USER=postgres\nPOSTGRES_PASSWORD=postgres\nPOSTGRES_DB=bridger" > db.env
+echo "DATABASE_URL=postgresql://postgres:postgres@db:5432/bridger" > backend.env
+```
+
+Install JS dependencies and build frontend:
+
+```bash
+pnpm i
+VITE_UPSTREAM_ROOT="/api/" pnpm build && chmod 755 -R dist
+```
+
+Spin up the project:
+
+```bash
+docker-compose up
+```
 
 Navigate to [homepage](http://127.0.0.1:7500)
