@@ -7,10 +7,10 @@ services:
       - "8000/tcp"
     volumes:
       - "./src/backend:/app"
-      - "./infrastructure/bootstrap.sh:/app/bootstrap.sh"
+      - "./infrastructure/bootstrap.sh:/tmp/bootstrap.sh"
     env_file:
       - "backend.env"
-    entrypoint: "./bootstrap.sh"
+    entrypoint: "/tmp/bootstrap.sh"
     depends_on:
       - db
     command: ["fastapi", "run", "main.py", "--host", "0.0.0.0", "--port", "8000"]
