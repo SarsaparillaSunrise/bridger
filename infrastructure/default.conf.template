@@ -3,15 +3,12 @@ server {
   server_name localhost;
 
   location / {
-    allow '${WHITELISTED_IP}';
-    deny all;
     root   /usr/share/nginx/html;
     index  index.html index.htm;
   }
 
 
   location /api/ {
-    # This isn't exposed
     proxy_pass http://backend:8000/;
   }
 }

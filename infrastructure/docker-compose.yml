@@ -3,8 +3,8 @@ services:
     build:
       context: "./src/backend"
       dockerfile: "../../infrastructure/Dockerfile"
-    expose:
-      - "8000/tcp"
+    ports:
+      - "8000:8000"
     volumes:
       - "./src/backend:/app"
       - "./infrastructure/bootstrap.sh:/tmp/bootstrap.sh"
