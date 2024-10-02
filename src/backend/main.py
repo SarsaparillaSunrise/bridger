@@ -14,6 +14,9 @@ Base = declarative_base()
 
 app = FastAPI(debug=True)
 
+
+start_mappers()
+
 app.add_middleware(
     CORSMiddleware,
     allow_origins=[
@@ -31,7 +34,6 @@ app.add_middleware(
 def get_db():
     engine = create_engine(DATABASE_URL)
     SessionLocal = sessionmaker(autoflush=True, bind=engine)
-    start_mappers()
     db = SessionLocal()
     try:
         yield db
