@@ -1,6 +1,6 @@
 import { render, screen, waitFor } from "@testing-library/react";
 import { MemoryRouter } from "react-router-dom";
-import { vi } from "vitest";
+import { describe, expect, test, vi } from "vitest";
 
 import { Form, Home, Search } from "./App";
 
@@ -88,7 +88,7 @@ describe("Form", () => {
     );
 
     await waitFor(() => {
-      const volumeField = screen.getByLabelText("Volume:");
+      const volumeField = screen.getByLabelText("Volume (kg):");
       expect(volumeField).toHaveProperty("name", "volume");
 
       const repsField = screen.getByLabelText("Rep Count:");
