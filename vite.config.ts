@@ -15,6 +15,12 @@ export default defineConfig({
       plugins: [tailwindcss()],
     },
   },
+  parserOptions: {
+    ecmaVersion: "latest",
+    sourceType: "module",
+    project: ["./tsconfig.json", "./tsconfig.node.json"],
+    tsconfigRootDir: __dirname,
+  },
   server: {
     // Prevent browser from stealing focus upon encountering writev/write
     // hmr: false
