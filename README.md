@@ -26,17 +26,19 @@
 
 - React 19
 - TypeScript
-- Tailwind CSS for styling
-- Vite for fast development and building
+- Tailwind CSS
+- Vite
 
 ### Backend
 
 - FastAPI
 - Python 3.12
-- SQLAlchemy for ORM
-- Alembic for database migrations
+- SQLAlchemy
+- Alembic
 
 ## Getting Started
 
     git clone git@github.com:SarsaparillaSunrise/bridger.git
     docker-compose up
+
+Navigate to [homepage](http://127.0.0.1:7500)
