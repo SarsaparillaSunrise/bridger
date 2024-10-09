@@ -5,7 +5,7 @@ from services import handlers
 def test_list_consumables(db_session, food_fixture):
     expected = validators.ConsumableRead(
         id=1,
-        category="FOOD",
+        category="Food",
         name="Test Food",
         calories=100,
         protein=100,

@@ -1,7 +1,7 @@
 def test_read_item_consumable(test_client) -> None:
     expected = dict(
         id=1,
-        category="FOOD",
+        category="Food",
         name="Test Food",
         calories=100,
         protein=100,
