@@ -1,5 +1,3 @@
-from datetime import UTC, datetime
-
 from sqlalchemy import (
     Column,
     DateTime,
@@ -9,6 +7,7 @@ from sqlalchemy import (
     MetaData,
     String,
     Table,
+    func,
 )
 from sqlalchemy.orm import registry
 
@@ -55,7 +54,12 @@ workouts = Table(
     Column("volume", Integer, nullable=False),
     Column("reps", Integer, nullable=False),
     Column("notes", String, nullable=True),
-    Column("inserted_at", DateTime, nullable=False, default=datetime.now(tz=UTC)),
+    Column(
+        "inserted_at",
+        DateTime(timezone=True),
+        server_default=func.now(),
+        nullable=False,
+    ),
 )
 
 
