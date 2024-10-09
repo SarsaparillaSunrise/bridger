@@ -48,7 +48,7 @@ async def consumables_list(session: Session = Depends(get_db)):
 
 @app.get("/exercise", response_model=List[validators.ExerciseRead])
 async def exercise_list(session: Session = Depends(get_db)):
-    return handlers.list_exercises(session=session)
+    return handlers.list_exercises_ordered_by_recent_use(session=session)
 
 
 @app.post("/intake", response_model=validators.IntakeRead, status_code=201)
