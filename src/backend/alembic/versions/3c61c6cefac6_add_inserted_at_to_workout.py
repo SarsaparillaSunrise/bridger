@@ -26,7 +26,7 @@ def upgrade() -> None:
             "inserted_at",
             sa.DateTime(timezone=True),
             nullable=False,
-            server_default=sa.func.timezone("UTC", sa.func.current_timestamp()),
+            server_default=sa.text("CURRENT_TIMESTAMP"),
         ),
     )
 
