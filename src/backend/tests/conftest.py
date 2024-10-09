@@ -3,12 +3,10 @@ from fastapi.testclient import TestClient
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from adapters.orm import metadata, start_mappers
+from adapters.orm import metadata
 from config import TEST_DATABASE_URL
 from domain import model
 from main import app, get_db
-
-start_mappers()
 
 
 @pytest.fixture(scope="function")
