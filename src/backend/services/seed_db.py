@@ -1,3 +1,5 @@
+import sys
+
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
@@ -7,13 +9,16 @@ from domain.model import CategoryConsumable, CategoryExercise, Consumable, Exerc
 
 engine = create_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autoflush=True, bind=engine)
+session = SessionLocal()
+
+if not session.query(Exercise).count() == 0:
+    sys.exit()
 
 metadata.drop_all(bind=engine)
 metadata.create_all(bind=engine)
 start_mappers()
 
 
-session = SessionLocal()
 print(session.query(Consumable).all())
 
 # With thanks to strengthlog.com
