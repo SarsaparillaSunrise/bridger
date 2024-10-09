@@ -3,23 +3,25 @@ import sys
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
 
-from adapters.orm import metadata, start_mappers
+from adapters.orm import start_mappers
 from config import DATABASE_URL
 from domain.model import CategoryConsumable, CategoryExercise, Consumable, Exercise
+
+
+def is_exercise_table_empty(session):
+    return session.query(Exercise).count() == 0
+
 
 engine = create_engine(DATABASE_URL, echo=True)
 SessionLocal = sessionmaker(autoflush=True, bind=engine)
 session = SessionLocal()
 
-if not session.query(Exercise).count() == 0:
-    sys.exit()
-
-metadata.drop_all(bind=engine)
-metadata.create_all(bind=engine)
 start_mappers()
 
+if not is_exercise_table_empty(session):
+    print("Database not empty. Exiting...")
+    sys.exit(0)
 
-print(session.query(Consumable).all())
 
 # With thanks to strengthlog.com
 
@@ -96,3 +98,4 @@ session.add(
 session.commit()
 
 print("Exercises added")
+session.close()
