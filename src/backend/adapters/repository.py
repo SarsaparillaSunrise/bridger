@@ -1,6 +1,9 @@
 import abc
+from typing import List
 
-from domain.model import Consumable
+from sqlalchemy import func
+
+from domain.model import Consumable, Exercise, Workout
 
 
 class AbstractRepository(abc.ABC):
@@ -40,3 +43,27 @@ class SQLAlchemyRepository(AbstractRepository):
         self._session.commit()
         self._session.refresh(record)
         return record
+
+
+class ExerciseRepository(SQLAlchemyRepository):
+    def get_exercises_ordered_by_recent_use(self) -> List[Exercise]:
+        latest_workout_subquery = (
+            self._session.query(
+                Workout.exercise_id, func.max(Workout.inserted_at).label("latest_use")
+            )
+            .group_by(Workout.exercise_id)
+            .subquery()
+        )
+
+        query = (
+            self._session.query(Exercise, latest_workout_subquery.c.latest_use)
+            .outerjoin(
+                latest_workout_subquery,
+                Exercise.id == latest_workout_subquery.c.exercise_id,
+            )
+            .order_by(
+                latest_workout_subquery.c.latest_use.desc().nullslast(), Exercise.id
+            )
+        )
+
+        return [exercise for exercise, _ in query.all()]
