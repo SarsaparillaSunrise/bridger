@@ -30,40 +30,49 @@ def db_session():
 
 
 @pytest.fixture()
-def beverage_fixture():
-    return model.Consumable(
-        name="Test Drink",
-        category=model.CategoryConsumable.BEVERAGE,
-        calories=100,
-        protein=100,
-        carbohydrate=100,
-        fat=100,
-    )
+def beverages():
+    return [
+        model.Consumable(
+            name=f"Test Drink {i}",
+            category=model.CategoryConsumable.BEVERAGE,
+            calories=100,
+            protein=100,
+            carbohydrate=100,
+            fat=100,
+        )
+        for i in range(1, 5)
+    ]
 
 
 @pytest.fixture()
-def food_fixture():
-    return model.Consumable(
-        name="Test Food",
-        category=model.CategoryConsumable.FOOD,
-        calories=100,
-        protein=100,
-        carbohydrate=100,
-        fat=100,
-    )
+def foods():
+    return [
+        model.Consumable(
+            name=f"Test Food {i}",
+            category=model.CategoryConsumable.FOOD,
+            calories=100,
+            protein=100,
+            carbohydrate=100,
+            fat=100,
+        )
+        for i in range(1, 5)
+    ]
 
 
 @pytest.fixture()
-def exercise_fixture():
-    return model.Exercise(
-        name="Test Exercise", category=model.CategoryExercise.COMPOUND_LIFT
-    )
+def exercises():
+    return [
+        model.Exercise(
+            name=f"Test Exercise {i}", category=model.CategoryExercise.COMPOUND_LIFT
+        )
+        for i in range(1, 10)
+    ]
 
 
 @pytest.fixture()
-def populated_session(db_session, food_fixture, exercise_fixture):
-    db_session.add(food_fixture)
-    db_session.add(exercise_fixture)
+def populated_session(db_session, foods, beverages, exercises):
+    db_session.add_all(foods + beverages)
+    db_session.add_all(exercises)
     db_session.commit()
 
     yield db_session
