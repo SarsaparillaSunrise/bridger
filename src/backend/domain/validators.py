@@ -25,6 +25,7 @@ class IntakeCreate(BaseValidator):
 
 class IntakeRead(BaseValidator):
     id: int
+    consumable_id: int
     volume: int
 
 
@@ -42,6 +43,7 @@ class WorkoutCreate(BaseValidator):
 
 
 class WorkoutRead(BaseValidator):
+    id: int
     exercise_id: int
     volume: int
     reps: int

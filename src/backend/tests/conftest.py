@@ -59,6 +59,12 @@ def foods():
     ]
 
 
+@pytest.fixture(params=["foods", "beverages"])
+def consumables(request):
+    # This is, as of 2024, the easiest way to parameterise fixtures:
+    return request.getfixturevalue(request.param)
+
+
 @pytest.fixture()
 def exercises():
     return [

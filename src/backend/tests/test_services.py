@@ -1,57 +1,97 @@
-from domain import validators
+from domain import model, validators
 from services import handlers
 
 
-def test_list_consumables(db_session, food_fixture):
-    expected = validators.ConsumableRead(
-        id=1,
-        category="Food",
-        name="Test Food",
-        calories=100,
-        protein=100,
-        carbohydrate=100,
-        fat=100,
-    )
-    db_session.add(food_fixture)
+def test_list_consumables(db_session, foods):
+    db_session.add_all(foods)
     db_session.commit()
-    assert handlers.list_consumables(db_session) == [expected]
+
+    result = handlers.list_consumables(db_session)
+
+    assert len(result) == len(foods)
+    for actual, expected in zip(result, foods):
+        assert actual.id is not None
+        assert actual.name == expected.name
+        assert actual.category == expected.category.value
+        assert actual.calories == expected.calories
+        assert actual.protein == expected.protein
+        assert actual.carbohydrate == expected.carbohydrate
+        assert actual.fat == expected.fat
 
 
-def test_list_exercises(db_session, exercise_fixture):
-    expected = validators.ExerciseRead(
-        id=1, name="Test Exercise", category="Compound Lift"
-    )
-    db_session.add(exercise_fixture)
+def test_list_exercises(db_session, exercises):
+    db_session.add_all(exercises)
     db_session.commit()
-    assert handlers.list_exercises(db_session) == [expected]
+
+    result = handlers.list_exercises(db_session)
+
+    assert len(result) == len(exercises)
+    for actual, expected in zip(result, exercises):
+        assert actual.id is not None
+        assert actual.name == expected.name
+        assert actual.category == expected.category.value
 
 
-def test_add_workout(db_session, exercise_fixture):
-    expected = validators.WorkoutRead(
-        exercise_id=1, volume=200, reps=1, notes="Test exercise"
-    )
-    db_session.add(exercise_fixture)
+def test_add_workout_returns_correct_data(db_session, exercises):
+    db_session.add_all(exercises)
     db_session.commit()
+    exercise = db_session.query(model.Exercise).first()
 
     workout = validators.WorkoutCreate(
-        exercise_id=1, volume=200, reps=1, notes="Test exercise"
+        exercise_id=exercise.id, volume=200, reps=1, notes="Test exercise"
     )
-    assert handlers.add_workout(session=db_session, workout=workout) == expected
+
+    result = handlers.add_workout(session=db_session, workout=workout)
+
+    assert result.id is not None
+    assert result.exercise_id == exercise.id
+    assert result.volume == 200
+    assert result.reps == 1
+    assert result.notes == "Test exercise"
 
 
-def test_add_food_intake(db_session, food_fixture):
-    expected = validators.IntakeRead(id=1, volume=100)
-    db_session.add(food_fixture)
+def test_add_intake_returns_correct_data(db_session, consumables):
+    db_session.add_all(consumables)
     db_session.commit()
-    intake = validators.IntakeCreate(consumable_id=food_fixture.id, volume=100)
+    consumable = db_session.query(model.Consumable).first()
+    intake = validators.IntakeCreate(consumable_id=consumable.id, volume=100)
+
     result = handlers.add_intake(session=db_session, intake=intake)
-    assert result == expected
+
+    assert result.id is not None
+    assert result.volume == 100
+    assert result.consumable_id == consumable.id
 
 
-def test_add_beverage_intake(db_session, beverage_fixture):
-    expected = validators.IntakeRead(id=1, volume=500)
-    db_session.add(beverage_fixture)
+def test_add_workout_persists_correct_data(db_session, exercises):
+    db_session.add_all(exercises)
     db_session.commit()
-    intake = validators.IntakeCreate(consumable_id=beverage_fixture.id, volume=500)
+    exercise = db_session.query(model.Exercise).first()
+
+    workout = validators.WorkoutCreate(
+        exercise_id=exercise.id, volume=200, reps=1, notes="Test exercise"
+    )
+
+    result = handlers.add_workout(session=db_session, workout=workout)
+
+    db_workout = db_session.query(model.Workout).filter_by(id=result.id).first()
+    assert db_workout is not None
+    assert db_workout.exercise_id == exercise.id
+    assert db_workout.volume == 200
+    assert db_workout.reps == 1
+    assert db_workout.notes == "Test exercise"
+    assert db_workout.exercise_id == exercise.id
+
+
+def test_add_intake_persists_correct_data(db_session, consumables):
+    db_session.add_all(consumables)
+    db_session.commit()
+    consumable = db_session.query(model.Consumable).first()
+    intake = validators.IntakeCreate(consumable_id=consumable.id, volume=100)
+
     result = handlers.add_intake(session=db_session, intake=intake)
-    assert result == expected
+
+    db_intake = db_session.query(model.Intake).filter_by(id=result.id).first()
+    assert db_intake is not None
+    assert db_intake.consumable_id == consumable.id
+    assert db_intake.volume == 100

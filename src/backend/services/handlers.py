@@ -19,7 +19,7 @@ def add_intake(session, intake: validators.IntakeCreate) -> validators.IntakeRea
     record = repository.create(Intake(consumable=consumable, volume=intake.volume))
     record.calculate_intake_presentation_values()
     return validators.IntakeRead(
-        consumable=consumable, id=record.id, volume=record.volume
+        consumable_id=consumable.id, id=record.id, volume=record.volume
     )
 
 
