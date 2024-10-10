@@ -1,3 +1,5 @@
+import time
+
 from domain import model, validators
 from services import handlers
 
@@ -19,17 +21,22 @@ def test_list_consumables(db_session, foods):
         assert actual.fat == expected.fat
 
 
-def test_list_exercises(db_session, exercises):
+def test_list_exercises_ordered_by_recent_use(db_session, exercises):
     db_session.add_all(exercises)
     db_session.commit()
+    expected_order = [3, 2, 1, 4]
+    workout_data = [(1, 100), (2, 200), (3, 300)]
 
-    result = handlers.list_exercises(db_session)
+    for exercise_id, volume in workout_data:
+        db_session.add(
+            model.Workout(exercise_id=exercise_id, volume=volume, reps=10, notes="")
+        )
+        db_session.commit()
+        time.sleep(0.1)  # 100ms delay
 
-    assert len(result) == len(exercises)
-    for actual, expected in zip(result, exercises):
-        assert actual.id is not None
-        assert actual.name == expected.name
-        assert actual.category == expected.category.value
+    result = handlers.list_exercises_ordered_by_recent_use(db_session)
+
+    assert [e.id for e in result][:4] == expected_order
 
 
 def test_add_workout_returns_correct_data(db_session, exercises):

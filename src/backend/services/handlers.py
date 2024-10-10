@@ -2,7 +2,7 @@ from typing import List
 
 from adapters.repository import ExerciseRepository, SQLAlchemyRepository
 from domain import validators
-from domain.model import Consumable, Exercise, Intake, Workout
+from domain.model import Consumable, Intake, Workout
 
 
 class IntegrityException(Exception):
@@ -41,14 +41,7 @@ def list_consumables(session) -> validators.ConsumableRead:
     return [validators.ConsumableRead(**c.__dict__) for c in records]
 
 
-def list_exercises(session):
-    # Deprecated
-    repository = SQLAlchemyRepository(session)
-    records = repository.list(Exercise)
-    return [validators.ExerciseRead(**e.__dict__) for e in records]
-
-
 def list_exercises_ordered_by_recent_use(session) -> List[validators.ExerciseRead]:
     repository = ExerciseRepository(session)
     records = repository.get_exercises_ordered_by_recent_use()
-    return [validators.ExerciseRead.from_orm(e) for e in records]
+    return [validators.ExerciseRead(**e.__dict__) for e in records]
