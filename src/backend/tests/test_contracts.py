@@ -1,24 +1,45 @@
-def test_read_item_consumable(test_client) -> None:
-    expected = dict(
-        id=1,
-        category="Food",
-        name="Test Food",
-        calories=100,
-        protein=100,
-        carbohydrate=100,
-        fat=100,
-    )
-    response = test_client.get(url="consumable")
-    assert response.json() == [expected]
+def test_read_consumables(test_client, foods, beverages) -> None:
+    def _assert_consumable_contract(response_item, fixture_item):
+        assert response_item["id"] is not None
+        assert response_item["name"] == fixture_item.name
+        assert response_item["category"] == fixture_item.category.value
+        assert response_item["calories"] == fixture_item.calories
+        assert response_item["protein"] == fixture_item.protein
+        assert response_item["carbohydrate"] == fixture_item.carbohydrate
+        assert response_item["fat"] == fixture_item.fat
+
+    required_keys = {
+        "id",
+        "name",
+        "category",
+        "calories",
+        "protein",
+        "carbohydrate",
+        "fat",
+    }
+    response = test_client.get(url="/consumable")
+    data = response.json()
+
+    response_foods = [item for item in data if item["category"] == "Food"]
+    response_beverages = [item for item in data if item["category"] == "Beverage"]
+
     assert response.status_code == 200
+    assert len(data) == len(foods) + len(beverages)
+    assert all(item.keys() == required_keys for item in data)
+    _assert_consumable_contract(response_foods[0], foods[0])
+    _assert_consumable_contract(response_beverages[0], beverages[0])
 
 
-def test_read_item_exercise(test_client) -> None:
-    response = test_client.get(url="exercise")
-    [exercise] = response.json()
+def test_read_exercises(test_client, exercises) -> None:
+    response = test_client.get(url="/exercise")
+    data = response.json()
+
     assert response.status_code == 200
-    assert exercise["category"] == "Compound Lift"
-    assert exercise["name"] == "Test Exercise"
+    assert len(data) == len(exercises)
+    assert all(set(item.keys()) == {"id", "name", "category"} for item in data)
+    assert data[0]["id"] is not None
+    assert data[0]["name"] == exercises[0].name
+    assert data[0]["category"] == exercises[0].category.value
 
 
 def test_create_workout_entry(test_client) -> None:
@@ -34,7 +55,7 @@ def test_create_workout_entry(test_client) -> None:
 
 def test_create_intake_entry(test_client) -> None:
     response = test_client.post(url="intake", json=dict(consumable_id=1, volume=120))
-    assert response.json() == {"id": 1, "volume": 120}
+    assert response.json() == {"id": 1, "consumable_id": 1, "volume": 120}
     assert response.status_code == 201
 
 
